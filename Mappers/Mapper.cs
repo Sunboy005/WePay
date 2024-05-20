@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using wepay.Models;
 
-namespace wepay.Models
+namespace wepay.Mappers
 {
     public class Mapper : Profile
     {

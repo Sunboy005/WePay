@@ -14,5 +14,10 @@ namespace wepay.Service
         {
             _userManager = userManager;
         }
+
+        public Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

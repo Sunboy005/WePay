@@ -20,4 +20,6 @@ public class UserForRegistrationDto :BaseEntity
     public bool IsDeleted { get; set; }
 
     public string Password { get; set; }
+
+    public ICollection<string>? Roles { get; set; }
 }

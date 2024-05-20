@@ -22,7 +22,7 @@ namespace wepay.Extensions
             services.AddScoped<IServiceManager, ServiceManager>();
 
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
-            services.AddDbContext<RepositoriesContext>(opts => opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+            services.AddDbContext<RepositoriesContext>(opts => opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {

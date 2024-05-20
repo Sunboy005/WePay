@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using wepay.Models;
 using wepay.Repository.Interface;
@@ -9,8 +10,9 @@ namespace wepay.Service
     public sealed class ServiceManager: IServiceManager
     {
         private readonly Lazy<IUserService> _userService;
-        public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager) {
-            _userService = new Lazy<IUserService>(() => new UserService(userManager));
+        
+        public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper) {
+            _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
         }
 
         public IUserService UserService { get {  return _userService.Value; } }

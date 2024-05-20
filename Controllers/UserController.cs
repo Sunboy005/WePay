@@ -17,12 +17,26 @@ namespace wepay.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserById(Guid id)
+        public async Task<IActionResult> GetUserById([FromBody] Guid id)
         {
             var user = _serviceManager.UserService.GetUserById(id); 
+            if (user == null)
+            {
+                return NotFound();
+            }
             return Ok(user);
          }
-        
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserByEmail([FromBody] string email)
+        {
+            var user = _serviceManager.UserService.GetUserByEmail(email); 
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
        
 
        

@@ -31,5 +31,15 @@ namespace wepay.Service
             return result;
 
         }
+        public async Task<User> GetUserById(Guid id)
+        {
+            var user= _userManager.FindByIdAsync(id); 
+            return user;
+        }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = _userManager.FindByEmailAsync(email);
+            return user;
+        }
     }
 }

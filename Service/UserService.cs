@@ -25,6 +25,9 @@ namespace wepay.Service
 
             var result = await _userManager.CreateAsync(user, userForRegistrationDto.Password);
 
+            if (result.Succeeded)
+                await _userManager.AddToRolesAsync(user, userForRegistrationDto.Roles);
+
             return result;
 
         }

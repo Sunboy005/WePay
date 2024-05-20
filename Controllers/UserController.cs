@@ -56,7 +56,18 @@ namespace wepay.Controllers
             return StatusCode(201);
 
         }
-   
+        [HttpPost]
+        public async Task<IActionResult> LoginUser([FromBody] UserForLoginDto userForLoginDto)
+        {
+            var result = await _serviceManager.UserService.LoginUser(userForLoginDto);
+            if (result == false)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(result);
+        }
+      
 
     }
 }

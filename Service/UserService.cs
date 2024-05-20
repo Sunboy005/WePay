@@ -41,5 +41,23 @@ namespace wepay.Service
             var user = await _userManager.FindByEmailAsync(email);
             return user;
         }
+        public async Task<bool> LoginUser(UserForLoginDto userForLoginDto)
+        {
+            _user = await _userManager.FindByNameAsync(userForLoginDto.UserName);
+
+            if (_user == null)
+            {
+                return false;
+            }
+
+            var passwordCorrect = await _userManager.CheckPasswordAsync(_user, userForLoginDto.Password)
+
+                if (!passwordCorrect)
+            {
+                return false;
+            }
+                return true;
+
+        }
     }
 }

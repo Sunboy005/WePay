@@ -1,12 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using wepay.Models;
 
 namespace wepay.Extensions
 {
     public static class ServiceExtensions
     {
+
+        public static void configureIdentity(this IServiceCollection services)
+        {
+           // var builder = services.AddIdentity<User, IdentityRole>(user => 
+           
+        }
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration
 configuration)

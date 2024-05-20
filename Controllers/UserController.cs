@@ -16,9 +16,9 @@ namespace wepay.Controllers
             _serviceManager = serviceManager;
         }
 
-<<<<<<< HEAD
+
         [HttpGet]
-        public async Task<IActionResult> GetUserById([FromBody] Guid id)
+        public async Task<IActionResult> GetUserById([FromBody] string id)
         {
             var user = _serviceManager.UserService.GetUserById(id); 
             if (user == null)
@@ -31,22 +31,22 @@ namespace wepay.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserByEmail([FromBody] string email)
         {
-            var user = _serviceManager.UserService.GetUserByEmail(email); 
+            var user = _serviceManager.UserService.GetUserByEmail(email);
             if (user == null)
             {
                 return NotFound();
             }
             return Ok(user);
-=======
-        [HttpPost]
+        }
 
+        [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
             var result = await _serviceManager.UserService.RegisterUser(userForRegistrationDto);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.TryAddModelError(error.Code, error.Description);
                 }
@@ -54,11 +54,10 @@ namespace wepay.Controllers
             }
 
             return StatusCode(201);
->>>>>>> 9af1d20c4e9b8549e9a8c18e1d88120a8bce5026
-        }
-       
 
-       
+        }
+   
 
     }
 }
+    

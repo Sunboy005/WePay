@@ -18,5 +18,15 @@ namespace wepay.Service
             _mapper = mapper;
             _userManager = userManager;
         }
+
+        public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto)
+        {
+            var user = _mapper.Map<User>(userForRegistrationDto);
+
+            var result = await _userManager.CreateAsync(user, userForRegistrationDto.Password);
+
+            return result;
+
+        }
     }
 }

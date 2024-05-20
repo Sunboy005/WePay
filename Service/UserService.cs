@@ -19,5 +19,10 @@ namespace wepay.Service
         {
             throw new NotImplementedException();
         }
+        public async Task<User> GetUserById(Guid id)
+        {
+            var user= _userManager.FindByIdAsync(id); 
+            return user;
+        }
     }
 }

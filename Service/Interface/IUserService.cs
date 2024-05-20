@@ -10,7 +10,7 @@ namespace wepay.Service.Interface
         Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto);
         Task<User> GetUserById(string id);
         Task<User> GetUserByEmail(string email);
-       
+       Task<bool> LoginUser(UserForLoginDto userForLoginDto)
 
     }
 }

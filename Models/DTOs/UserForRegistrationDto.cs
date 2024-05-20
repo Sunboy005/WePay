@@ -21,5 +21,5 @@ public class UserForRegistrationDto :BaseEntity
 
     public string Password { get; set; }
 
-    public ICollection<string> Roles { get; set; }
+    public ICollection<string>? Roles { get; set; }
 }

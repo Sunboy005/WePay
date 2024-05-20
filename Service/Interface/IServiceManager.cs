@@ -1,6 +1,9 @@
-﻿namespace wepay.Service.Interface
+﻿using Microsoft.AspNetCore.Authentication;
+
+namespace wepay.Service.Interface
 {
     public interface IServiceManager
     {
+        IUserService UserService { get; }
     }
 }

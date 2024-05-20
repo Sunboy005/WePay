@@ -14,7 +14,5 @@ namespace wepay.Service
         {
             _userManager = userManager;
         }
-
-       
     }
 }

@@ -4,16 +4,37 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using wepay.Models;
+using wepay.Repository;
+using wepay.Repository.Interface;
+using wepay.Service.Interface;
+using wepay.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace wepay.Extensions
 {
     public static class ServiceExtensions
     {
 
-        public static void configureIdentity(this IServiceCollection services)
+        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+        public static void ConfigureServiceMAnager(this IServiceCollection services) =>
+            services.AddScoped<IServiceManager, ServiceManager>();
+
+        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
+            services.AddDbContext<RepositoriesContext>(opts => opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+
+        public static void ConfigureIdentity(this IServiceCollection services)
         {
-           // var builder = services.AddIdentity<User, IdentityRole>(user => 
-           
+            var builder = services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true; 
+            }).AddEntityFrameworkStores<RepositoriesContext>()
+            .AddDefaultTokenProviders; 
         }
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration
@@ -22,10 +43,7 @@ configuration)
             var jwtSettings = configuration.GetSection("JwtSettings");
             // var secretKey = Environment.GetEnvironmentVariable("SECRET");
 
-            var secretKey = "MY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEY" +
-                "MY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEY" +
-                "MY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEY" +
-                "MY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEYMY_SECRET_KEY";
+            var secretKey = "OUR_WEPAY_VERY_SECRET_KEY_THAT_SHOULD_NOT_LEAK_OUTSIDE_THIS_ENVIRONMENT";
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

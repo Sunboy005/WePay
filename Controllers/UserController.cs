@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 using wepay.Models;
+using wepay.Models.DTOs;
 using wepay.Service.Interface;
 
 
@@ -70,6 +71,18 @@ namespace wepay.Controllers
 
             return Ok(new { Token = _serviceManager.UserService.CreateToken() });
  
+        }
+
+        [HttpDelete("deleteuser")]
+        public async Task<IActionResult> DeleteUser([FromBody]UserDeletionDto userDeletionDto)
+        {
+            var result = await _serviceManager.UserService.DeleteUser(userDeletionDto);
+            if (result == false)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
         }
     }
 }

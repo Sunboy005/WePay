@@ -1,7 +1,8 @@
 ﻿using System;
 using wepay.Models;
+using wepay.Models.DTOs;
 
-public class UserForRegistrationDto :BaseEntity
+public class UserForRegistrationDto /*: UserCreationDto*/
 {
     public string FirstName { get; set; }
 
@@ -14,10 +15,6 @@ public class UserForRegistrationDto :BaseEntity
     public string PhoneNumber { get; set; }
 
     public string Address { get; set; }
-
-    public bool IsActive { get; set; }
-
-    public bool IsDeleted { get; set; }
 
     public string Password { get; set; }
 

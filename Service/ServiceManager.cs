@@ -11,8 +11,9 @@ namespace wepay.Service
     {
         private readonly Lazy<IUserService> _userService;
         
-        public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper) {
-            _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
+        
+        public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration) {
+            _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper, configuration));
         }
 
         public IUserService UserService { get {  return _userService.Value; } }

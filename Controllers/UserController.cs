@@ -6,18 +6,21 @@ using wepay.Service.Interface;
 
 namespace wepay.Controllers
 {
+    [Route("wepay/authentication")]
+    [ApiController]
     public class UserController : ControllerBase
 
     {
         private readonly IServiceManager _serviceManager;
 
+      
         public UserController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }
 
 
-        [HttpGet]
+        [HttpGet("getuserbyid")]
         public async Task<IActionResult> GetUserById([FromBody] string id)
         {
             var user = _serviceManager.UserService.GetUserById(id); 
@@ -28,7 +31,7 @@ namespace wepay.Controllers
             return Ok(user);
          }
 
-        [HttpGet]
+        [HttpGet("getuserbyemail")]
         public async Task<IActionResult> GetUserByEmail([FromBody] string email)
         {
             var user = _serviceManager.UserService.GetUserByEmail(email);
@@ -39,7 +42,7 @@ namespace wepay.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPost("createuser")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
             var result = await _serviceManager.UserService.RegisterUser(userForRegistrationDto);
@@ -56,7 +59,7 @@ namespace wepay.Controllers
             return StatusCode(201);
 
         }
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] UserForLoginDto userForLoginDto)
         {
             var result = await _serviceManager.UserService.LoginUser(userForLoginDto);
@@ -65,10 +68,9 @@ namespace wepay.Controllers
                 return Unauthorized();
             }
 
-            return Ok(result);
+            return Ok(new { Token = _serviceManager.UserService.CreateToken() });
+ 
         }
-      
-
     }
 }
     

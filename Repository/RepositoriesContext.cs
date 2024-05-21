@@ -6,7 +6,14 @@ namespace wepay.Repository
 {
     public class RepositoriesContext : IdentityDbContext<User>
     {
-        public RepositoriesContext(DbContextOptions options) : base(options) { }
+        public RepositoriesContext(DbContextOptions options) : base(options) {}
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+
+
 
 
     }

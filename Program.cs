@@ -1,6 +1,20 @@
+using wepay.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddAuthentication();
+
+builder.Services.ConfigureIdentity();
+
+builder.Services.ConfigureJWT(builder.Configuration);
+
+builder.Services.ConfigureRepositoryManager();
+
+builder.Services.ConfigureSqlContext(builder.Configuration);
+
+builder.Services.ConfigureServiceMAnager();
 
 // Add services to the container.
 
@@ -18,7 +32,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

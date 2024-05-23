@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using wepay.Models;
+using wepay.Models.DTOs;
 using wepay.Service.Interface;
 
 namespace wepay.Service
@@ -97,7 +98,7 @@ namespace wepay.Service
         }
 
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,
-List<Claim> claims)
+        List<Claim> claims)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenOptions = new JwtSecurityToken
@@ -109,6 +110,28 @@ List<Claim> claims)
             signingCredentials: signingCredentials
             );
             return tokenOptions;
+        }
+
+        public async Task<bool> DeleteUser(UserDeletionDto userDeletionDto)
+        {
+
+
+            var user = await _userManager.FindByEmailAsync(userDeletionDto.Email);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var passwordCorrect = await _userManager.CheckPasswordAsync(user, userDeletionDto.Password);
+
+            if(passwordCorrect == false)
+            {
+                return false;
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded;
         }
     }
 }

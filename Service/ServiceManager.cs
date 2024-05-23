@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using wepay.EmailService;
 using wepay.Models;
 using wepay.Repository.Interface;
 using wepay.Service.Interface;
@@ -12,8 +13,9 @@ namespace wepay.Service
         private readonly Lazy<IUserService> _userService;
         
         
-        public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration) {
-            _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper, configuration));
+        public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration, IEmailSender emailSender) {
+
+            _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper, configuration, emailSender));
         }
 
         public IUserService UserService { get {  return _userService.Value; } }

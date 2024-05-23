@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using wepay.EmailService;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -21,10 +21,10 @@ namespace wepay.Controllers
         }
 
 
-        [HttpGet("{id}", Name = "GetUserById" )]
+        [HttpGet("id/{id}", Name = "GetUserById" )]
         public async Task<IActionResult> GetUserById( string id)
         {
-            var user = _serviceManager.UserService.GetUserById(id);
+            var user = await _serviceManager.UserService.GetUserById(id);
             if (user == null)
             {
                 return NotFound();
@@ -32,10 +32,10 @@ namespace wepay.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{email}", Name = "GetUserByEmail")]
-        public async Task<IActionResult> GetUserByEmail( string email)
+        [HttpGet("email/{email}", Name = "GetUserByEmail")]
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
-            var user = _serviceManager.UserService.GetUserByEmail(email);
+            var user = await _serviceManager.UserService.GetUserByEmail(email);
             if (user == null)
             {
                 return NotFound();
@@ -91,6 +91,17 @@ namespace wepay.Controllers
             return Ok();
         }
 
+        [HttpPost("email/verify/{email}")]
+        public async Task<IActionResult> VerifyUserEmail(string email)
+        {
+            var token = await _serviceManager.UserService.VerifyUserEmail(email, "");
+
+            var confirmationLink = Url.Action(nameof(ConfirmUserEmail), "WePayAccount", new { token, email = email }, Request.Scheme);
+            var message = new Message(new string[] { email }, "Wepay - Confirm Email Address. Click link to confirm your email address", confirmationLink);
+            await _serviceManager.UserService.SendEmailAsync(message);
+            return Ok("We have sent an email confirmation link to" + email);
+        }
+
         [HttpPost("email/confirm")]
         public async Task<IActionResult> ConfirmUserEmail([FromBody] UserForEmailConfirmationDto userForEmailConfirmationDto)
         {
@@ -122,6 +133,8 @@ namespace wepay.Controllers
 
             return NoContent();
         }
+
+        
     }
 }
     

@@ -34,7 +34,9 @@ namespace wepay.Service
 
         public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto)
         {
-            var user = _mapper.Map<User>(userForRegistrationDto);
+            var userForCreation = _mapper.Map<UserCreationDto>(userForRegistrationDto);
+
+            var user = _mapper.Map<User>(userForCreation);
 
             var result = await _userManager.CreateAsync(user, userForRegistrationDto.Password);
 
@@ -74,17 +76,19 @@ namespace wepay.Service
 
         public async Task<(bool, IdentityResult)> ChangePassword(UserForChangePasswordDto userForChangePasswordDto)
         {
-            var user = _userManager.FindByEmailAsync(userForChangePasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(userForChangePasswordDto.Email);
             if (user == null) {
                 return (false, IdentityResult.Failed());
             }
-            var token = await _userManager.GeneratePasswordResetTokenAsync(await user);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             if (token == null)
             {
                 return (false, IdentityResult.Failed());
             }
 
-            var result = await _userManager.ChangePasswordAsync(await user, token, userForChangePasswordDto.NewPassword);
+           var result = await _userManager.ResetPasswordAsync(user, token, userForChangePasswordDto.NewPassword);
+
+          
 
             if (!result.Succeeded)
             {
@@ -139,17 +143,26 @@ namespace wepay.Service
             return tokenOptions;
         }
 
-
-        public async Task VerifyUserEmail(User user, string url)
+        public async Task SendEmailAsync(Message message)
         {
+            await _emailSender.SendEmailAsync(message);
+
+        }
+
+
+        public async Task<String> VerifyUserEmail(String email, string url)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User not Found");
+            }
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             if (token == null)
             {
                 throw new Exception("Internal Server Error");
             }
-
-            var message = new Message(new string[] { user.Email }, "Wepay - Confirm Email Address", url);
-            await _emailSender.SendEmailAsync(message);
+             return token;
 
         }
 

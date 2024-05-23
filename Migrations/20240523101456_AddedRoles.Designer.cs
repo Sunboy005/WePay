@@ -12,8 +12,8 @@ using wepay.Repository;
 namespace wepay.Migrations
 {
     [DbContext(typeof(RepositoriesContext))]
-    [Migration("20240523080138_UpdatingIdentityTable")]
-    partial class UpdatingIdentityTable
+    [Migration("20240523101456_AddedRoles")]
+    partial class AddedRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,6 +49,29 @@ namespace wepay.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "8bcfd653-bb18-4746-ab59-b30814c8895c",
+                            ConcurrencyStamp = "86395346-1f8d-4fb8-8bba-d4dbee67d0c9",
+                            Name = "Noob",
+                            NormalizedName = "NOOB"
+                        },
+                        new
+                        {
+                            Id = "9ee33304-6d5e-4d22-890f-3dfaef8eecc2",
+                            ConcurrencyStamp = "2e644fa9-d4f5-49d2-b7ed-d62d0496f43d",
+                            Name = "Elite",
+                            NormalizedName = "ELITE"
+                        },
+                        new
+                        {
+                            Id = "fee50a02-c893-4f00-95ab-34e520a9521a",
+                            ConcurrencyStamp = "8ab13c6e-ac55-4c6c-add5-5ae28f8131e4",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -170,7 +193,6 @@ namespace wepay.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -207,7 +229,6 @@ namespace wepay.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 

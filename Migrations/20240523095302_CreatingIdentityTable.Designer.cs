@@ -12,8 +12,8 @@ using wepay.Repository;
 namespace wepay.Migrations
 {
     [DbContext(typeof(RepositoriesContext))]
-    [Migration("20240520124823_CreatingIdentityTables")]
-    partial class CreatingIdentityTables
+    [Migration("20240523095302_CreatingIdentityTable")]
+    partial class CreatingIdentityTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

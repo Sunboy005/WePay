@@ -10,6 +10,7 @@ using wepay.Service.Interface;
 using wepay.Service;
 using Microsoft.EntityFrameworkCore;
 using wepay.EmailService;
+using wepay.Utils;
 
 namespace wepay.Extensions
 {
@@ -38,13 +39,18 @@ namespace wepay.Extensions
         {
             var builder = services.AddIdentity<User, IdentityRole>(options =>
             {
-           //     options.SignIn.RequireConfirmedEmail = true;
+
+                //     options.SignIn.RequireConfirmedEmail = true;
                 options.User.RequireUniqueEmail = true;
+                options.Tokens.PasswordResetTokenProvider = "passwordReset";
+                options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
                 options.Password.RequiredLength = 8;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = true; 
             }).AddEntityFrameworkStores<RepositoriesContext>()
+            .AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation")
+            .AddTokenProvider<PasswordResetTokenProvider<User>>("passwordReset")
             .AddDefaultTokenProviders; 
         }
 

@@ -12,7 +12,7 @@ namespace wepay.EmailService
         public Message(IEnumerable<string> to, string subject, string body) { 
             To = new List<MailAddress>();
 
-            To.AddRange(to.Select(x => new MailAddress(string.Empty, x))); 
+            To.AddRange(to.Select(x => new MailAddress(x, x))); 
             Subject = subject;
             Body = body;
         

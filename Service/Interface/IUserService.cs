@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using wepay.EmailService;
 using wepay.Models;
 using wepay.Models.DTOs;
 
@@ -15,7 +16,9 @@ namespace wepay.Service.Interface
 
         Task<(bool, IdentityResult)> ChangePassword(UserForChangePasswordDto userForChangePasswordDto);
 
-        Task VerifyUserEmail(User user, string url);
+        Task<String> VerifyUserEmail(string email, string url);
+
+        Task SendEmailAsync(Message mesage);
 
         Task<IdentityResult> ConfirmUserEmail(UserForEmailConfirmationDto userForEmailConfirmationDto);
 

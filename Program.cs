@@ -1,4 +1,9 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using wepay.Extensions;
+using wepay.Models;
+using wepay.Service.Interface;
+using wepay.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 

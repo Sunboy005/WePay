@@ -14,6 +14,7 @@ namespace wepay.Service.Interface
         Task<bool> LoginUser(UserForLoginDto userForLoginDto);
         Task<string> CreateToken();
         Task<bool> DeleteUser(UserDeletionDto userDeletionDto);
+        Task<bool> UpdateUserAsync(string userId, UserUpdateDto userUpdateDto);
 
     }
 }

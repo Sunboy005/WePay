@@ -10,7 +10,7 @@ namespace wepay.Mappers
         {
             CreateMap<UserForRegistrationDto, User>();
             CreateMap<UserCreationDto, UserForRegistrationDto>();
-
+            CreateMap<UserUpdateDto, User>();
         }
     }
 }

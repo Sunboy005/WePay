@@ -114,8 +114,6 @@ namespace wepay.Service
 
         public async Task<bool> DeleteUser(UserDeletionDto userDeletionDto)
         {
-
-
             var user = await _userManager.FindByEmailAsync(userDeletionDto.Email);
             if (user == null)
             {
@@ -133,5 +131,23 @@ namespace wepay.Service
 
             return result.Succeeded;
         }
+
+        public async Task<bool> UpdateUserAsync(string userId, UserUpdateDto userUpdateDto)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            if (userUpdateDto.Email != null)
+                user.Email = userUpdateDto.Email;
+            if (userUpdateDto.PhoneNumber != null)
+                user.PhoneNumber = userUpdateDto.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
     }
 }
+

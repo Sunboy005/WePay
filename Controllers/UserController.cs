@@ -84,6 +84,19 @@ namespace wepay.Controllers
 
             return NoContent();
         }
+
+        [HttpPatch("updateuser/{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto userUpdateDto)
+        {
+            var result = await _serviceManager.UserService.UpdateUserAsync(id, userUpdateDto);
+
+            if (!result)
+            {
+                return NotFound("User not found or update failed.");
+            }
+
+            return NoContent();
+        }
     }
 }
     

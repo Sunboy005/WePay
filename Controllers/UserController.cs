@@ -110,6 +110,18 @@ namespace wepay.Controllers
             }
 
         }
+
+        [HttpDelete("deleteuser")]
+        public async Task<IActionResult> DeleteUser([FromBody]UserDeletionDto userDeletionDto)
+        {
+            var result = await _serviceManager.UserService.DeleteUser(userDeletionDto);
+            if (result == false)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
     }
 }
     

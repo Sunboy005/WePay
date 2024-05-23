@@ -10,8 +10,8 @@ namespace wepay.Service.Interface
         Task<User> GetUserById(string id);
         Task<User> GetUserByEmail(string email);
         Task<bool> LoginUser(UserForLoginDto userForLoginDto);
-
         Task<string> CreateToken();
+        Task<bool> DeleteUser(UserDeletionDto userDeletionDto);
 
         Task<(bool, IdentityResult)> ChangePassword(UserForChangePasswordDto userForChangePasswordDto);
 

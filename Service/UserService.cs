@@ -125,7 +125,7 @@ namespace wepay.Service
         }
 
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,
-List<Claim> claims)
+        List<Claim> claims)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenOptions = new JwtSecurityToken
@@ -139,6 +139,7 @@ List<Claim> claims)
             return tokenOptions;
         }
 
+ 
         public async Task VerifyUserEmail(User user, string url)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -163,6 +164,29 @@ List<Claim> claims)
             var result = await _userManager.ConfirmEmailAsync(user, userForEmailConfirmationDto.Token);
             return result;
 
+
+
+
+        public async Task<bool> DeleteUser(UserDeletionDto userDeletionDto)
+        {
+
+
+            var user = await _userManager.FindByEmailAsync(userDeletionDto.Email);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var passwordCorrect = await _userManager.CheckPasswordAsync(user, userDeletionDto.Password);
+
+            if(passwordCorrect == false)
+            {
+                return false;
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded;
 
         }
     }

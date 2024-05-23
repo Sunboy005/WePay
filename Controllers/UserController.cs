@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using wepay.EmailService;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -7,35 +7,37 @@ using wepay.Service.Interface;
 
 namespace wepay.Controllers
 {
-    [Route("wepay/authentication")]
+    [Route("wepay/user")]
     [ApiController]
     public class UserController : ControllerBase
 
     {
         private readonly IServiceManager _serviceManager;
 
-      
+
         public UserController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }
 
 
-        [HttpGet("getuserbyid")]
-        public async Task<IActionResult> GetUserById([FromBody] string id)
+        [HttpGet("id/{id}", Name = "GetUserById" )]
+        public async Task<IActionResult> GetUserById( string id)
         {
-            var user = _serviceManager.UserService.GetUserById(id); 
-            if (user == null)
+            var identityUser = await _serviceManager.UserService.GetUserById(id);
+            
+            if (identityUser == null)
             {
                 return NotFound();
             }
-            return Ok(user);
-         }
 
-        [HttpGet("getuserbyemail")]
-        public async Task<IActionResult> GetUserByEmail([FromBody] string email)
+            return Ok(identityUser);
+        }
+
+        [HttpGet("email/{email}", Name = "GetUserByEmail")]
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
-            var user = _serviceManager.UserService.GetUserByEmail(email);
+            var user = await _serviceManager.UserService.GetUserByEmail(email);
             if (user == null)
             {
                 return NotFound();
@@ -43,7 +45,7 @@ namespace wepay.Controllers
             return Ok(user);
         }
 
-        [HttpPost("createuser")]
+        [HttpPost("create")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
             var result = await _serviceManager.UserService.RegisterUser(userForRegistrationDto);
@@ -70,7 +72,56 @@ namespace wepay.Controllers
             }
 
             return Ok(new { Token = _serviceManager.UserService.CreateToken() });
- 
+
+        }
+
+        [HttpPost("password/change")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserForChangePasswordDto userForChangePasswordDto)
+        {
+            var result = await _serviceManager.UserService.ChangePassword(userForChangePasswordDto);
+
+            if (result.Item1 == false)
+            {
+                foreach (var error in result.Item2.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return BadRequest(ModelState);
+
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("email/verify/{email}")]
+        public async Task<IActionResult> VerifyUserEmail(string email)
+        {
+            var token = await _serviceManager.UserService.VerifyUserEmail(email, "");
+
+            var confirmationLink = Url.Action(nameof(ConfirmUserEmail), "WePayAccount", new { token, email = email }, Request.Scheme);
+            var message = new Message(new string[] { email }, "Wepay - Confirm Email Address. Click link to confirm your email address", confirmationLink);
+            await _serviceManager.UserService.SendEmailAsync(message);
+            return Ok("We have sent an email confirmation link to" + email);
+        }
+
+        [HttpPost("email/confirm")]
+        public async Task<IActionResult> ConfirmUserEmail([FromBody] UserForEmailConfirmationDto userForEmailConfirmationDto)
+        {
+            var result = await _serviceManager.UserService.ConfirmUserEmail(userForEmailConfirmationDto);
+            if (result.Succeeded)
+            {
+                return Ok();
+
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return BadRequest(ModelState);
+            }
+
         }
 
         [HttpDelete("deleteuser")]

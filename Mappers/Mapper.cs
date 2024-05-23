@@ -8,7 +8,8 @@ namespace wepay.Mappers
     {
         public Mapper()
         {
-            CreateMap<UserForRegistrationDto, User>();
+            CreateMap<UserCreationDto, User>();
+            CreateMap<UserForRegistrationDto, UserCreationDto>();
             CreateMap<UserCreationDto, UserForRegistrationDto>();
             CreateMap<UserUpdateDto, User>();
         }

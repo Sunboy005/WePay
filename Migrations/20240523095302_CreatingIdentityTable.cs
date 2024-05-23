@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace wepay.Migrations
 {
-    public partial class CreatingIdentityTables : Migration
+    public partial class CreatingIdentityTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

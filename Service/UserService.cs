@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using wepay.EmailService;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -16,12 +19,14 @@ namespace wepay.Service
         private readonly UserManager<User>  _userManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
 
         private User _user;
 
-        public UserService(UserManager<User> userManager, IMapper mapper, IConfiguration configuration)
+        public UserService(UserManager<User> userManager, IMapper mapper, IConfiguration configuration, IEmailSender emailSender)
 
         {
+            _emailSender = emailSender;
             _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
@@ -65,8 +70,30 @@ namespace wepay.Service
                 return false;
             }
                 return true;
-
         }
+
+        public async Task<(bool, IdentityResult)> ChangePassword(UserForChangePasswordDto userForChangePasswordDto)
+        {
+            var user = _userManager.FindByEmailAsync(userForChangePasswordDto.Email);
+            if (user == null) {
+                return (false, IdentityResult.Failed());
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(await user);
+            if (token == null)
+            {
+                return (false, IdentityResult.Failed());
+            }
+
+            var result = await _userManager.ChangePasswordAsync(await user, token, userForChangePasswordDto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return (false, result);
+            }
+            return (true, result);
+        }
+
+
 
         public async Task<string> CreateToken()
         {
@@ -112,6 +139,34 @@ namespace wepay.Service
             return tokenOptions;
         }
 
+ 
+        public async Task VerifyUserEmail(User user, string url)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            if (token == null)
+            {
+                throw new Exception("Internal Server Error");
+            }
+
+            var message = new Message(new string[] { user.Email }, "Wepay - Confirm Email Address", url);
+            await _emailSender.SendEmailAsync(message);
+           
+        }
+
+        public async Task<IdentityResult> ConfirmUserEmail(UserForEmailConfirmationDto userForEmailConfirmationDto)
+        {
+            var user = await _userManager.FindByEmailAsync(userForEmailConfirmationDto.Email);
+            if (user == null)
+            {
+                throw new Exception("User not Found");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, userForEmailConfirmationDto.Token);
+            return result;
+
+
+
+
         public async Task<bool> DeleteUser(UserDeletionDto userDeletionDto)
         {
 
@@ -132,6 +187,7 @@ namespace wepay.Service
             var result = await _userManager.DeleteAsync(user);
 
             return result.Succeeded;
+
         }
     }
 }

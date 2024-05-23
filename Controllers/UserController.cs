@@ -7,33 +7,33 @@ using wepay.Service.Interface;
 
 namespace wepay.Controllers
 {
-    [Route("wepay/authentication")]
+    [Route("wepay/user")]
     [ApiController]
     public class UserController : ControllerBase
 
     {
         private readonly IServiceManager _serviceManager;
 
-      
+
         public UserController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }
 
 
-        [HttpGet("getuserbyid")]
-        public async Task<IActionResult> GetUserById([FromBody] string id)
+        [HttpGet("{id}", Name = "GetUserById" )]
+        public async Task<IActionResult> GetUserById( string id)
         {
-            var user = _serviceManager.UserService.GetUserById(id); 
+            var user = _serviceManager.UserService.GetUserById(id);
             if (user == null)
             {
                 return NotFound();
             }
             return Ok(user);
-         }
+        }
 
-        [HttpGet("getuserbyemail")]
-        public async Task<IActionResult> GetUserByEmail([FromBody] string email)
+        [HttpGet("{email}", Name = "GetUserByEmail")]
+        public async Task<IActionResult> GetUserByEmail( string email)
         {
             var user = _serviceManager.UserService.GetUserByEmail(email);
             if (user == null)
@@ -43,7 +43,7 @@ namespace wepay.Controllers
             return Ok(user);
         }
 
-        [HttpPost("createuser")]
+        [HttpPost("create")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
             var result = await _serviceManager.UserService.RegisterUser(userForRegistrationDto);
@@ -70,7 +70,45 @@ namespace wepay.Controllers
             }
 
             return Ok(new { Token = _serviceManager.UserService.CreateToken() });
- 
+
+        }
+
+        [HttpPost("password/change")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserForChangePasswordDto userForChangePasswordDto)
+        {
+            var result = await _serviceManager.UserService.ChangePassword(userForChangePasswordDto);
+
+            if (result.Item1 == false)
+            {
+                foreach (var error in result.Item2.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return BadRequest(ModelState);
+
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("email/confirm")]
+        public async Task<IActionResult> ConfirmUserEmail([FromBody] UserForEmailConfirmationDto userForEmailConfirmationDto)
+        {
+            var result = await _serviceManager.UserService.ConfirmUserEmail(userForEmailConfirmationDto);
+            if (result.Succeeded)
+            {
+                return Ok();
+
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return BadRequest(ModelState);
+            }
+
         }
 
         [HttpDelete("deleteuser")]

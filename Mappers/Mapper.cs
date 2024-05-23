@@ -12,6 +12,7 @@ namespace wepay.Mappers
             CreateMap<UserForRegistrationDto, UserCreationDto>();
             CreateMap<UserCreationDto, UserForRegistrationDto>();
             CreateMap<UserUpdateDto, User>();
+            CreateMap<User, IdentityUserDto>();
         }
     }
 }

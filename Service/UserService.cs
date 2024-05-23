@@ -16,7 +16,7 @@ namespace wepay.Service
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<User>  _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
@@ -46,7 +46,7 @@ namespace wepay.Service
         }
         public async Task<User> GetUserById(string id)
         {
-            var user= await  _userManager.FindByIdAsync(id); 
+            var user = await _userManager.FindByIdAsync(id);
             return user;
         }
         public async Task<User> GetUserByEmail(string email)
@@ -65,11 +65,11 @@ namespace wepay.Service
 
             var passwordCorrect = await _userManager.CheckPasswordAsync(_user, userForLoginDto.Password);
 
-                if (!passwordCorrect)
+            if (!passwordCorrect)
             {
                 return false;
             }
-                return true;
+            return true;
         }
 
         public async Task<(bool, IdentityResult)> ChangePassword(UserForChangePasswordDto userForChangePasswordDto)
@@ -105,7 +105,7 @@ namespace wepay.Service
 
         private SigningCredentials GetSigningCredentials()
         {
-          
+
             var key = Encoding.UTF8.GetBytes("OUR_WEPAY_VERY_SECRET_KEY_THAT_SHOULD_NOT_LEAK_OUTSIDE_THIS_ENVIRONMENT");
             var secret = new SymmetricSecurityKey(key);
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
@@ -139,7 +139,7 @@ namespace wepay.Service
             return tokenOptions;
         }
 
- 
+
         public async Task VerifyUserEmail(User user, string url)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -150,7 +150,7 @@ namespace wepay.Service
 
             var message = new Message(new string[] { user.Email }, "Wepay - Confirm Email Address", url);
             await _emailSender.SendEmailAsync(message);
-           
+
         }
 
         public async Task<IdentityResult> ConfirmUserEmail(UserForEmailConfirmationDto userForEmailConfirmationDto)
@@ -163,31 +163,33 @@ namespace wepay.Service
 
             var result = await _userManager.ConfirmEmailAsync(user, userForEmailConfirmationDto.Token);
             return result;
+        }
 
 
 
 
-        public async Task<bool> DeleteUser(UserDeletionDto userDeletionDto)
-        {
-
-
-            var user = await _userManager.FindByEmailAsync(userDeletionDto.Email);
-            if (user == null)
+            public async Task<bool> DeleteUser(UserDeletionDto userDeletionDto)
             {
-                return false;
+
+
+                var user = await _userManager.FindByEmailAsync(userDeletionDto.Email);
+                if (user == null)
+                {
+                    return false;
+                }
+
+                var passwordCorrect = await _userManager.CheckPasswordAsync(user, userDeletionDto.Password);
+
+                if (passwordCorrect == false)
+                {
+                    return false;
+                }
+
+                var result = await _userManager.DeleteAsync(user);
+
+                return result.Succeeded;
+
             }
-
-            var passwordCorrect = await _userManager.CheckPasswordAsync(user, userDeletionDto.Password);
-
-            if(passwordCorrect == false)
-            {
-                return false;
-            }
-
-            var result = await _userManager.DeleteAsync(user);
-
-            return result.Succeeded;
-
         }
     }
-}
+

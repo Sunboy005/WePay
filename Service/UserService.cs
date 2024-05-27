@@ -46,16 +46,22 @@ namespace wepay.Service
             return result;
 
         }
-        public async Task<IdentityUser> GetUserById(string id)
+        public async Task<IdentityUserDto> GetUserById(string id)
         {
-            var identityUser = await _userManager.FindByIdAsync(id);
-            var user = _mapper.Map<IdentityUserDto>(identityUser);
+            var user = await _userManager.FindByIdAsync(id);
+            var roles = await _userManager.GetRolesAsync(user);
+            var identityUser = _mapper.Map<IdentityUserDto>(user);
+            identityUser.Roles = roles;
             return identityUser;
         }
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<IdentityUserDto> GetUserByEmail(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return user;
+            var identityUser = _mapper.Map<IdentityUserDto>(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            identityUser.Roles = roles;
+
+            return identityUser;
         }
         public async Task<bool> LoginUser(UserForLoginDto userForLoginDto)
         {

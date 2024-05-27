@@ -21,8 +21,8 @@ namespace wepay.Controllers
         }
 
 
-        [HttpGet("id/{id}", Name = "GetUserById" )]
-        public async Task<IActionResult> GetUserById( string id)
+        [HttpGet("id", Name = "GetUserById" )]
+        public async Task<IActionResult> GetUserById( [FromQuery] string id)
         {
             var identityUser = await _serviceManager.UserService.GetUserById(id);
             
@@ -34,8 +34,8 @@ namespace wepay.Controllers
             return Ok(identityUser);
         }
 
-        [HttpGet("email/{email}", Name = "GetUserByEmail")]
-        public async Task<IActionResult> GetUserByEmail(string email)
+        [HttpGet("email", Name = "GetUserByEmail")]
+        public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
             var user = await _serviceManager.UserService.GetUserByEmail(email);
             if (user == null)

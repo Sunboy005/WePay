@@ -13,11 +13,11 @@ namespace wepay.Models
 
         public bool IsDeleted { get; set; } = false;
 
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public DateTime DateModified { get; set; } = DateTime.Now;
+
+        
 
     }
 }

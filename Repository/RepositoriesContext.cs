@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using wepay.Models;
+using wepay.Utils;
 
 namespace wepay.Repository
 {
@@ -13,6 +14,8 @@ namespace wepay.Repository
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new RoleConfiguration());
         }
+
+        public DbSet<Wallet>? Wallets { get; set; } 
 
         }
     }

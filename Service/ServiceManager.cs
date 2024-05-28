@@ -12,16 +12,20 @@ namespace wepay.Service
     {
         private readonly Lazy<IUserService> _userService;
         private readonly Lazy<IAuthService> _authService;
+        private readonly Lazy<IWalletService> _walletService;
         
         
         public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration, IEmailSender emailSender) {
 
             _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
             _authService = new Lazy<IAuthService>(() => new AuthService(userManager, mapper, configuration, emailSender));
+            _walletService = new Lazy<IWalletService>(() => new WalletService());
         }
 
         public IUserService UserService { get {  return _userService.Value; } }
 
         public IAuthService AuthService { get { return _authService.Value; } }
+
+        public IWalletService WalletService {  get { return _walletService.Value; } }
     }
 }

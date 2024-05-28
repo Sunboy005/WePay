@@ -62,67 +62,7 @@ namespace wepay.Controllers
             return StatusCode(201);
 
         }
-        [HttpPost("login")]
-        public async Task<IActionResult> LoginUser([FromBody] UserForLoginDto userForLoginDto)
-        {
-            var result = await _serviceManager.UserService.LoginUser(userForLoginDto);
-            if (result == false)
-            {
-                return Unauthorized();
-            }
 
-            return Ok(new { Token = _serviceManager.UserService.CreateToken() });
-
-        }
-
-        [HttpPost("password/change")]
-        public async Task<IActionResult> ChangePassword([FromBody] UserForChangePasswordDto userForChangePasswordDto)
-        {
-            var result = await _serviceManager.UserService.ChangePassword(userForChangePasswordDto);
-
-            if (result.Item1 == false)
-            {
-                foreach (var error in result.Item2.Errors)
-                {
-                    ModelState.TryAddModelError(error.Code, error.Description);
-                }
-                return BadRequest(ModelState);
-
-            }
-
-            return Ok();
-        }
-
-        [HttpPost("email/verify/{email}")]
-        public async Task<IActionResult> VerifyUserEmail(string email)
-        {
-            var token = await _serviceManager.UserService.VerifyUserEmail(email, "");
-
-            var confirmationLink = Url.Action(nameof(ConfirmUserEmail), "WePayAccount", new { token, email = email }, Request.Scheme);
-            var message = new Message(new string[] { email }, "Wepay - Confirm Email Address. Click link to confirm your email address", confirmationLink);
-            await _serviceManager.UserService.SendEmailAsync(message);
-            return Ok("We have sent an email confirmation link to" + email);
-        }
-
-        [HttpPost("email/confirm")]
-        public async Task<IActionResult> ConfirmUserEmail([FromBody] UserForEmailConfirmationDto userForEmailConfirmationDto)
-        {
-            var result = await _serviceManager.UserService.ConfirmUserEmail(userForEmailConfirmationDto);
-            if (result.Succeeded)
-            {
-                return Ok();
-
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.TryAddModelError(error.Code, error.Description);
-                }
-                return BadRequest(ModelState);
-            }
-
-        }
 
         [HttpDelete("deleteuser")]
         public async Task<IActionResult> DeleteUser([FromBody]UserDeletionDto userDeletionDto)

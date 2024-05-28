@@ -1,7 +1,11 @@
-﻿namespace wepay.Service.Interface
+﻿using wepay.Models;
+
+namespace wepay.Service.Interface
 {
     public interface IWalletService
     {
-        Task LockWallet(String id);
+        Task<Wallet> LockWallet(String walletId);
+
+        Task<Wallet> EnableWallet(String walletId);
     }
 }

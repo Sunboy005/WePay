@@ -1,6 +1,6 @@
 ﻿namespace wepay.Models.DTOs
 {
-    public class UserCreationDto : BaseEntity
+    public class AdminForRegistrationDto
     {
         public string FirstName { get; set; }
 
@@ -14,11 +14,6 @@
 
         public string Address { get; set; }
 
-        public bool IsActive { get; set; } = true;
-
-        public bool IsDeleted { get; set; } = false;
-
         public string Password { get; set; }
-        public IEnumerable<string> Role { get; set; } = new List<string>() { "Noob" };
     }
 }

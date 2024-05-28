@@ -8,6 +8,7 @@ namespace wepay.Service.Interface
     public interface IUserService
     {
         Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto);
+        Task<IdentityResult> RegisterAdmin(AdminForRegistrationDto adminForRegistrationDto);
         Task<IdentityUserDto> GetUserById(string id);
         Task<IdentityUserDto> GetUserByEmail(string email);
         Task<bool> DeleteUser(UserDeletionDto userDeletionDto);

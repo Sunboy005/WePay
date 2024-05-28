@@ -88,6 +88,25 @@ namespace wepay.Controllers
 
             return NoContent();
         }
+
+
+        [HttpPost("create/admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] AdminForRegistrationDto adminForRegistrationDto)
+        {
+            var result = await _serviceManager.UserService.RegisterAdmin(adminForRegistrationDto);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return BadRequest(ModelState);
+            }
+
+            return StatusCode(201);
+
+        }
     }
 }
     

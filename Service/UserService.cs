@@ -37,10 +37,12 @@ namespace wepay.Service
 
             var user = _mapper.Map<User>(userForCreation);
 
+            user.CreatedDate = DateTime.Now;
+
             var result = await _userManager.CreateAsync(user, userForRegistrationDto.Password);
 
             if (result.Succeeded)
-                await _userManager.AddToRolesAsync(user, userForRegistrationDto.Roles);
+                await _userManager.AddToRolesAsync(user, userForCreation.Role);
             return result;
 
         }
@@ -77,10 +79,14 @@ namespace wepay.Service
             {
                 return false;
             }
-            if (userUpdateDto.Email != null)
-                user.Email = userUpdateDto.Email;
             if (userUpdateDto.PhoneNumber != null)
                 user.PhoneNumber = userUpdateDto.PhoneNumber;
+            if (userUpdateDto.FirstName != null)
+                user.PhoneNumber = userUpdateDto.FirstName;
+            if (userUpdateDto.LastName != null)
+                user.PhoneNumber = userUpdateDto.LastName;
+            if (userUpdateDto.Address != null)
+                user.PhoneNumber = userUpdateDto.Address;
 
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
@@ -90,7 +96,7 @@ namespace wepay.Service
             var user = await _userManager.FindByIdAsync(id);
             var roles = await _userManager.GetRolesAsync(user);
             var identityUser = _mapper.Map<IdentityUserDto>(user);
-            identityUser.Roles = roles;
+            identityUser.Role = roles.First();
             return identityUser;
         }
         public async Task<IdentityUserDto> GetUserByEmail(string email)
@@ -98,11 +104,25 @@ namespace wepay.Service
             var user = await _userManager.FindByEmailAsync(email);
             var identityUser = _mapper.Map<IdentityUserDto>(user);
             var roles = await _userManager.GetRolesAsync(user);
-            identityUser.Roles = roles;
+            identityUser.Role = roles.First();
 
             return identityUser;
         }
 
+        public async Task<IdentityResult> RegisterAdmin(AdminForRegistrationDto adminForRegistrationDto)
+        {
+            var adminForCreation = _mapper.Map<AdminCreationDto>(adminForRegistrationDto);
+
+            var admin = _mapper.Map<User>(adminForCreation);
+
+            admin.CreatedDate = DateTime.Now;
+
+            var result = await _userManager.CreateAsync(admin, adminForRegistrationDto.Password);
+
+            if (result.Succeeded)
+                await _userManager.AddToRolesAsync(admin, adminForCreation.Role);
+            return result;
+        }
     }
 }
 

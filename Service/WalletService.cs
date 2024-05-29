@@ -76,7 +76,7 @@ namespace wepay.Service
         }
         public async Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto)
         {
-            var wallet = await GetWalletById(changeWalletPinDto.Address);
+            var wallet = await GetWalletByAddress(changeWalletPinDto.Address);
             if (wallet == null || wallet.Pin != changeWalletPinDto.Pin)
             {
                 return false;

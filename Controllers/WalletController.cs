@@ -79,6 +79,18 @@ namespace wepay.Controllers
             return Ok();
 
         }
+        [HttpPost("change-pin")]
+        public async Task<IActionResult> ChangeWalletPin([FromBody] ChangeWalletPinDto changeWalletPinDto)
+        {
+            var result = await _serviceManager.WalletService.ChangePinAsync(changeWalletPinDto);
+            if (!result)
+            {
+                return BadRequest("Failed to change PIN, the current PIN might be incorrect or the wallet does not exist.");
+            }
+            return Ok("PIN changed successfully");
+        }
+
+
 
 
     }

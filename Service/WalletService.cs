@@ -65,5 +65,16 @@ namespace wepay.Service
             _repositoryManager.WalletRepository.updateWallet(wallet);
             return wallet;
         }
+        public async Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto)
+        {
+            var wallet = await GetWalletById(changeWalletPinDto.Address);
+            if (wallet == null || wallet.Pin != changeWalletPinDto.Pin)
+            {
+                return false;
+            }
+            wallet.Pin = changeWalletPinDto.Pin;
+            _repositoryManager.WalletRepository.updateWallet(wallet);
+            return true;
+        }
     }
 }

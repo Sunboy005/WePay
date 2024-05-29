@@ -6,7 +6,7 @@ namespace wepay.Service
     {
         public async Task LockWallet(string id)
         {
-         var wallet =    
+       //     var wallet;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace wepay.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace wepay.Models
 {
     public class BaseEntity
     {

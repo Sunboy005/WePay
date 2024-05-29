@@ -1,4 +1,6 @@
-﻿using wepay.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
+using wepay.Models;
 using wepay.Repository.Interface;
 
 namespace wepay.Repository

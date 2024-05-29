@@ -19,7 +19,6 @@ namespace wepay.Service
 
         public async Task<Wallet> CreateWallet(WalletCreationDto walletcreationDto)
         {
-           // var walletCreation = _mapper.Map<WalletCreationDto>(walletcreationDto);
 
             var wallet = _mapper.Map<Wallet>(walletcreationDto);
             wallet.CreatedDate = DateTime.Now;

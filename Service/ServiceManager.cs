@@ -19,7 +19,7 @@ namespace wepay.Service
 
             _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
             _authService = new Lazy<IAuthService>(() => new AuthService(userManager, mapper, configuration, emailSender));
-            _walletService = new Lazy<IWalletService>(() => new WalletService());
+            _walletService = new Lazy<IWalletService>(() => new WalletService(repositoryManager, mapper));
         }
 
         public IUserService UserService { get {  return _userService.Value; } }

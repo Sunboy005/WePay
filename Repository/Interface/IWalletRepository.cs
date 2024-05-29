@@ -1,6 +1,12 @@
-﻿namespace wepay.Repository.Interface
+﻿using wepay.Models;
+
+namespace wepay.Repository.Interface
 {
-    public class IWalletRepository
+    public interface IWalletRepository
     {
+       void updateWallet(Wallet wallet);
+
+       Task<Wallet> getWalletById(string id);  
+
     }
 }

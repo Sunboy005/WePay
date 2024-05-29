@@ -2,5 +2,6 @@
 {
     public interface IRepositoryManager
     {
+        IWalletRepository WalletRepository { get; } 
     }
 }

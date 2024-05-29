@@ -6,7 +6,7 @@ using wepay.Service.Interface;
 
 namespace wepay.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("wepay/auth")]
     [ApiController]
 
     public class AuthenticationController : ControllerBase

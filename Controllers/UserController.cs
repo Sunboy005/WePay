@@ -45,7 +45,7 @@ namespace wepay.Controllers
             return Ok(user);
         }
 
-        [HttpPost("create")]
+        [HttpPost("create-user")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
             var result = await _serviceManager.UserService.RegisterUser(userForRegistrationDto);
@@ -64,7 +64,7 @@ namespace wepay.Controllers
         }
 
 
-        [HttpDelete("deleteuser")]
+        [HttpDelete("delete-user")]
         public async Task<IActionResult> DeleteUser([FromBody]UserDeletionDto userDeletionDto)
         {
             var result = await _serviceManager.UserService.DeleteUser(userDeletionDto);
@@ -76,7 +76,7 @@ namespace wepay.Controllers
             return NoContent();
         }
 
-        [HttpPatch("updateuser/{id}")]
+        [HttpPatch("update-user/{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto userUpdateDto)
         {
             var result = await _serviceManager.UserService.UpdateUserAsync(id, userUpdateDto);
@@ -90,7 +90,7 @@ namespace wepay.Controllers
         }
 
 
-        [HttpPost("create/admin")]
+        [HttpPost("create-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] AdminForRegistrationDto adminForRegistrationDto)
         {
             var result = await _serviceManager.UserService.RegisterAdmin(adminForRegistrationDto);

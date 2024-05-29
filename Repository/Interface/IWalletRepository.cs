@@ -10,6 +10,7 @@ namespace wepay.Repository.Interface
        Task<Wallet> getWalletByAddress(string address);
 
        Task<Wallet>CreateWallet(Wallet wallet);
+        Task<Wallet>GetWalletByUserId(string userId);
 
     }
 }

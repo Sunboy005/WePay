@@ -92,6 +92,26 @@ namespace wepay.Controllers
 
 
 
+        [HttpGet("userId", Name ="GetWalletByUserId")]
+        public async Task<IActionResult> GetWalletByUserId(string userId)
+        {
+            var user = await _serviceManager.UserService.GetUserById(userId);
+
+            if (user == null)
+            {
+                return NotFound("User with " + userId + "does not exist");
+            }
+
+            var wallet = await _serviceManager.WalletService.GetWalletByUserId(userId);
+            if(wallet == null)
+            {
+                return NotFound("User with " + userId + "does not have a wallet");
+            }
+
+            return Ok(wallet);
+
+        }
+
 
     }
 }

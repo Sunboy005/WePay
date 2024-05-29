@@ -27,13 +27,21 @@ namespace wepay.Repository
 
         public async Task<Wallet> getWalletByAddress(string address)
         {
-            return _repositoriesContext.Wallets.Where(a => a.Address == address).FirstOrDefault();
+            var wallet = _repositoriesContext.Wallets.Where(a => a.Address == address).FirstOrDefault(); ;
+            return wallet;
         }
 
         public void updateWallet(Wallet wallet)
         {
             _repositoriesContext.Wallets.Update(wallet);
             _repositoriesContext.SaveChangesAsync();
+        
+       }
+
+        public async Task<Wallet> GetWalletByUserId(string userId)
+        {
+            var wallet = _repositoriesContext.Wallets.Where(a =>a.UserId == userId).FirstOrDefault();
+            return wallet;
         }
 
 

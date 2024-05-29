@@ -31,7 +31,7 @@ namespace wepay.Controllers
 
         }
 
-        [HttpPost("password/change")]
+        [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] UserForChangePasswordDto userForChangePasswordDto)
         {
             var result = await _serviceManager.AuthService.ChangePassword(userForChangePasswordDto);
@@ -49,7 +49,7 @@ namespace wepay.Controllers
             return Ok();
         }
 
-        [HttpPost("email/verify/{email}")]
+        [HttpPost("verify-email/{email}")]
         public async Task<IActionResult> VerifyUserEmail(string email)
         {
             var token = await _serviceManager.AuthService.VerifyUserEmail(email, "");
@@ -60,7 +60,7 @@ namespace wepay.Controllers
             return Ok("We have sent an email confirmation link to" + email);
         }
 
-        [HttpPost("email/confirm")]
+        [HttpPost("confirm-email")]
         public async Task<IActionResult> ConfirmUserEmail([FromBody] UserForEmailConfirmationDto userForEmailConfirmationDto)
         {
             var result = await _serviceManager.AuthService.ConfirmUserEmail(userForEmailConfirmationDto);

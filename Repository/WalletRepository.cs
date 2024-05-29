@@ -33,6 +33,13 @@ namespace wepay.Repository
         {
             _repositoriesContext.Wallets.Update(wallet);
             _repositoriesContext.SaveChangesAsync();
+        
+       }
+
+        public async Task<Wallet> GetWalletByUserId(string userId)
+        {
+            var wallet = _repositoriesContext.Wallets.Where(a =>a.UserId == userId).FirstOrDefault();
+            return wallet;
         }
 
 

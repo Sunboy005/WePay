@@ -10,6 +10,13 @@ namespace wepay.Repository
             _repositoriesContext = repositoriesContext;
               }
 
+        public async Task<Wallet> CreateWallet(Wallet wallet)
+        {
+            _repositoriesContext.Wallets.Add(wallet);
+            await _repositoriesContext.SaveChangesAsync();
+            return wallet;
+        }
+
         public async Task<Wallet> getWalletById(string walletID)
         {
             var wallet = await _repositoriesContext.Wallets.FindAsync(walletID);

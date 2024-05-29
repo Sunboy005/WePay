@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using wepay.Models;
+using wepay.Models.DTOs;
 using wepay.Repository.Interface;
 using wepay.Service.Interface;
+using wepay.Utils;
 
 namespace wepay.Service
 {
@@ -13,6 +16,19 @@ namespace wepay.Service
             _repositoryManager = repositoryManager;
             _mapper = mapper;
                 }
+
+        public async Task<Wallet> CreateWallet(WalletCreationDto walletcreationDto)
+        {
+           // var walletCreation = _mapper.Map<WalletCreationDto>(walletcreationDto);
+
+            var wallet = _mapper.Map<Wallet>(walletcreationDto);
+            wallet.CreatedDate = DateTime.Now;
+            wallet.Address = AddressGenerator.AddressGen(10);
+
+            var result = await _repositoryManager.WalletRepository.CreateWallet(wallet);
+
+            return result;
+        }
 
         public async Task<Wallet> EnableWallet(string walletId)
         {

@@ -16,6 +16,8 @@ namespace wepay.Mappers
             CreateMap<AdminCreationDto, AdminForRegistrationDto>();
             CreateMap<AdminForRegistrationDto, AdminCreationDto>();
             CreateMap<AdminCreationDto, User>();
+            CreateMap<Wallet, WalletCreationDto>();
+            CreateMap<WalletCreationDto, Wallet>();
         }
     }
 }

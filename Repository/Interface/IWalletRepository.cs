@@ -6,7 +6,9 @@ namespace wepay.Repository.Interface
     {
        void updateWallet(Wallet wallet);
 
-       Task<Wallet> getWalletById(string id);  
+       Task<Wallet> getWalletById(string id);
+
+       Task<Wallet>CreateWallet(Wallet wallet);
 
     }
 }

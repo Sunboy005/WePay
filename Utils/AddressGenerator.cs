@@ -1,9 +1,9 @@
 ﻿namespace wepay.Utils
 {
-    public class PinGenerator
+    public class AddressGenerator
     {
         private static readonly Random _rdm = new Random();
-        private string PinGen(int digits)
+        public static string AddressGen(int digits)
         {
             if (digits <= 1) return "";
 

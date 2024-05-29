@@ -28,8 +28,32 @@ namespace wepay.Controllers
             var result = await _serviceManager.WalletService.CreateWallet(walletcreationDto);
 
             return Created("WalletAddress", result.Address);
-            
+        }
 
+        [HttpGet("id", Name = "GetWalletById")]
+        public async Task<IActionResult> GetWalletById([FromQuery] string id)
+        {
+            var wallet = await _serviceManager.WalletService.GetWalletById(id);
+
+            if (wallet == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(wallet);
+        }
+
+        [HttpGet("address", Name = "GetWalletByAddress")]
+        public async Task<IActionResult> GetWalletByAddress([FromQuery] string address)
+        {
+            var wallet = await _serviceManager.WalletService.GetWalletByAddress(address);
+
+            if (wallet == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(wallet);
         }
 
         [HttpPost("lock/{walletId}")]

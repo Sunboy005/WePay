@@ -13,6 +13,8 @@ namespace wepay.Models
         public string UserId { get; set; }
         public User? user { get; set; }
         public bool IsLocked { get; set; } = false;
+        [Required(ErrorMessage = "Pin is required")]
+        [StringLength(4, ErrorMessage = "Pin must be 4 digits")]
         public string Pin { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime DateModified { get; set; } = DateTime.Now;

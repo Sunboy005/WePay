@@ -42,6 +42,20 @@ namespace wepay.Service
             return wallet;
         }
 
+        public async Task<Wallet> GetWalletByAddress(string address)
+        {
+            var walletEntity = await _repositoryManager.WalletRepository.getWalletByAddress(address);
+            var wallet = _mapper.Map<Wallet>(walletEntity);
+            return wallet;
+        }
+
+        public async Task<Wallet> GetWalletById(string id)
+        {
+            var walletEntity =await _repositoryManager.WalletRepository.getWalletById(id);
+            var wallet = _mapper.Map<Wallet>(walletEntity);
+            return wallet;
+        }
+
         public async Task<Wallet> LockWallet(string walletId)
         {
          var wallet = await _repositoryManager.WalletRepository.getWalletById(walletId);

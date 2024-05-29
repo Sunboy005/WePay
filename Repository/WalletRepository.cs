@@ -23,6 +23,12 @@ namespace wepay.Repository
             return wallet;
         }
 
+        public async Task<Wallet> getWalletByAddress(string address)
+        {
+            var wallet = await _repositoriesContext.Wallets.FindAsync(address);
+            return wallet;
+        }
+
         public void updateWallet(Wallet wallet)
         {
             _repositoriesContext.Wallets.Update(wallet);

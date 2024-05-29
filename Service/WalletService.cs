@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Repository.Interface;
@@ -76,7 +77,7 @@ namespace wepay.Service
         }
         public async Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto)
         {
-            var wallet = await GetWalletByAddress(changeWalletPinDto.Address);
+            var wallet = await _repositoryManager.WalletRepository.getWalletByAddress(changeWalletPinDto.Address);
             if (wallet == null || wallet.Pin != changeWalletPinDto.Pin)
             {
                 return false;

@@ -1,4 +1,6 @@
-﻿using wepay.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
+using wepay.Models;
 using wepay.Repository.Interface;
 
 namespace wepay.Repository
@@ -25,8 +27,7 @@ namespace wepay.Repository
 
         public async Task<Wallet> getWalletByAddress(string address)
         {
-            var wallet = await _repositoriesContext.Wallets.FindAsync(address);
-            return wallet;
+            return _repositoriesContext.Wallets.Where(a => a.Address == address).FirstOrDefault();
         }
 
         public void updateWallet(Wallet wallet)

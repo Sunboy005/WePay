@@ -12,5 +12,6 @@ namespace wepay.Service.Interface
         Task<Wallet> LockWallet(String walletId);
         Task<Wallet> EnableWallet(String walletId);
         Task<WalletDto>GetWalletByUserId(string userId);
+        Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto);
     }
 }

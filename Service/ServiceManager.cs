@@ -13,6 +13,7 @@ namespace wepay.Service
         private readonly Lazy<IUserService> _userService;
         private readonly Lazy<IAuthService> _authService;
         private readonly Lazy<IWalletService> _walletService;
+        private readonly Lazy<ICurrencyService> _currencyService;
         private readonly Lazy<IOtpService> _otpService;
         
         
@@ -21,6 +22,8 @@ namespace wepay.Service
             _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
             _authService = new Lazy<IAuthService>(() => new AuthService(signInManager, userManager, mapper, configuration));
             _walletService = new Lazy<IWalletService>(() => new WalletService(repositoryManager, mapper));
+            _currencyService = new Lazy<ICurrencyService>(() => new CurrencyService(repositoryManager, mapper));
+            _otpService = new Lazy<IOtpService>(() => new OtpService(repositoryManager, mapper));
         }
 
         public IUserService UserService { get {  return _userService.Value; } }
@@ -28,5 +31,9 @@ namespace wepay.Service
         public IAuthService AuthService { get { return _authService.Value; } }
 
         public IWalletService WalletService {  get { return _walletService.Value; } }
+
+        public ICurrencyService CurrencyService {  get { return _currencyService.Value; } }
+
+        public IOtpService OtpService {  get { return _otpService.Value; } }
     }
 }

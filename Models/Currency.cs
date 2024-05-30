@@ -10,6 +10,8 @@ namespace wepay.Models
         public string CurrencyName { get; set; }
         public string ShortCode { get; set; }
         public bool IsBase { get; set; }
+        public int Balance { get; set; }
+        public string Symbol { get; set; }
         [Column("Id")]
         [ForeignKey("Id")]
         public string WalletId { get; set; }

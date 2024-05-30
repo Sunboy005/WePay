@@ -1,4 +1,5 @@
-﻿using wepay.Repository.Interface;
+﻿using wepay.Models;
+using wepay.Repository.Interface;
 
 namespace wepay.Repository
 {
@@ -8,6 +9,17 @@ namespace wepay.Repository
         public CurrencyRepository(RepositoriesContext repositoriesContext)
         {
             _repositoriesContext = repositoriesContext;
+        }
+        public async Task<Currency> getCurrencyById(string currencyId)
+        {
+            var currency = await _repositoriesContext.Currencies.FindAsync(currencyId);
+            return currency;
+        }
+
+        public async Task updateCurrency(Currency currency)
+        {
+            _repositoriesContext.Currencies.Update(currency);
+           await _repositoriesContext.SaveChangesAsync();
         }
     }
 }

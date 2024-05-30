@@ -21,7 +21,6 @@ namespace wepay.Service
             _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
             _authService = new Lazy<IAuthService>(() => new AuthService(signInManager, userManager, mapper, configuration));
             _walletService = new Lazy<IWalletService>(() => new WalletService(repositoryManager, mapper));
-            _otpService = new Lazy<IOtpService> (() => new OtpService(repositoryManager, mapper));
         }
 
         public IUserService UserService { get {  return _userService.Value; } }
@@ -29,7 +28,5 @@ namespace wepay.Service
         public IAuthService AuthService { get { return _authService.Value; } }
 
         public IWalletService WalletService {  get { return _walletService.Value; } }
-
-        public IOtpService OtpService { get { return _otpService.Value;}}
     }
 }

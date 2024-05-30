@@ -31,7 +31,7 @@ public class AuthService : IAuthService
 
     public async Task<bool> LoginUser(UserForLoginDto userForLoginDto)
     {
-        _user = await _userManager.FindByNameAsync(userForLoginDto.UserName);
+        _user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
         if (_user == null)
         {
             return false;

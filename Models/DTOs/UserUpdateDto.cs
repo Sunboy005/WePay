@@ -13,5 +13,8 @@ namespace wepay.Models.DTOs
         public string? PhoneNumber { get; set; }
         [Required(ErrorMessage = "Address is required")]
         public string? Address { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Gender { get; set; }
+        public string ProfilePicture { get; set; }
     }
 }

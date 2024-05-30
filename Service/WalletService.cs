@@ -23,7 +23,7 @@ namespace wepay.Service
 
             var wallet = _mapper.Map<Wallet>(walletcreationDto);
             wallet.CreatedDate = DateTime.Now;
-            wallet.Address = AddressGenerator.AddressGen(10);
+            wallet.Address = WalletAddressGenerator.AddressGen(10);
 
             var result = await _repositoryManager.WalletRepository.CreateWallet(wallet);
 

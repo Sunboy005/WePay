@@ -16,8 +16,5 @@ namespace wepay.Models
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public DateTime DateModified { get; set; } = DateTime.Now;
-
-        
-
     }
 }

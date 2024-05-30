@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using wepay.EmailService;
+
 using wepay.Models;
 using wepay.Models.DTOs;
 
@@ -9,8 +9,8 @@ namespace wepay.Service.Interface
     {
         Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto);
         Task<IdentityResult> RegisterAdmin(AdminForRegistrationDto adminForRegistrationDto);
-        Task<IdentityUserDto> GetUserById(string id);
-        Task<IdentityUserDto> GetUserByEmail(string email);
+        Task<IdentityUserDto?> GetUserById(string id);
+        Task<IdentityUserDto?> GetUserByEmail(string email);
         Task<bool> DeleteUser(UserDeletionDto userDeletionDto);
         Task<bool> UpdateUserAsync(string userId, UserUpdateDto userUpdateDto);
 

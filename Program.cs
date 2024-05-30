@@ -7,7 +7,7 @@ using wepay.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigureEmail(builder.Configuration);
+
 
 builder.Services.AddAutoMapper(typeof(Program));
 

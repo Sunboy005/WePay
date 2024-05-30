@@ -9,7 +9,7 @@ using wepay.Repository.Interface;
 using wepay.Service.Interface;
 using wepay.Service;
 using Microsoft.EntityFrameworkCore;
-using wepay.EmailService;
+
 using wepay.Utils;
 
 namespace wepay.Extensions
@@ -17,14 +17,7 @@ namespace wepay.Extensions
     public static class ServiceExtensions
     {
 
-        public static void ConfigureEmail(this IServiceCollection services, IConfiguration configuration)
-        {
-            var emailConfig = configuration.GetSection("EmailConfiguration")
-                .Get<EmailConfiguration>();
-            services.AddSingleton(emailConfig);
-            services.AddScoped<IEmailSender, EmailSender>();
-        }
-
+        
 
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -39,18 +32,14 @@ namespace wepay.Extensions
         {
             var builder = services.AddIdentity<User, IdentityRole>(options =>
             {
-
-                //     options.SignIn.RequireConfirmedEmail = true;
-                options.User.RequireUniqueEmail = true;
-                options.Tokens.PasswordResetTokenProvider = "passwordReset";
-                options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
+                
+                options.SignIn.RequireConfirmedEmail = true;   
+                options.User.RequireUniqueEmail = true;               
                 options.Password.RequiredLength = 8;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = true; 
-            }).AddEntityFrameworkStores<RepositoriesContext>()
-            .AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation")
-            .AddTokenProvider<PasswordResetTokenProvider<User>>("passwordReset")
+            }).AddEntityFrameworkStores<RepositoriesContext>()           
             .AddDefaultTokenProviders; 
         }
 

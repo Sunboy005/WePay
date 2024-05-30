@@ -1,9 +1,9 @@
 ﻿namespace wepay.Utils
 {
-    public class AddressGenerator
+    public class OtpCodeGenerator
     {
         private static readonly Random _rdm = new Random();
-        public static string AddressGen(int digits)
+        public static string GenerateOtp(int digits)
         {
             if (digits <= 1) return "";
 

@@ -17,5 +17,7 @@ namespace wepay.Repository
 
         public DbSet<Wallet>? Wallets { get; set; } 
 
+        public DbSet<Otp> Otps { get; set; }
+
         }
     }

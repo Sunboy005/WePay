@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using wepay.EmailService;
+
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -37,6 +37,7 @@ namespace wepay.Controllers
         [HttpGet("email", Name = "GetUserByEmail")]
         public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
+
             var user = await _serviceManager.UserService.GetUserByEmail(email);
             if (user == null)
             {

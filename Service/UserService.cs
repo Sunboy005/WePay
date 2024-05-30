@@ -87,8 +87,8 @@ namespace wepay.Service
                 user.LastName = userUpdateDto.LastName;
             if (userUpdateDto.Address != null)
                 user.Address = userUpdateDto.Address;
-            if (userUpdateDto.Address != null)
-                user.ProfilePicture = userUpdateDto.Address;
+            if (userUpdateDto.ProfilePicture != null)
+                user.ProfilePicture = userUpdateDto.ProfilePicture;
 
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;

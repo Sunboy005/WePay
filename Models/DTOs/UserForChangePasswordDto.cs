@@ -12,5 +12,11 @@ namespace wepay.Models.DTOs
 
         [Required(ErrorMessage = "Password is required")]
         public string NewPassword { get; set; }
+
+        [Required(ErrorMessage = "Code is required")]
+        [StringLength(4, ErrorMessage = "Required code is 4 characters")]
+        public string Code { get; set; }
+
+
     }
 }

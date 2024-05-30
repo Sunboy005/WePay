@@ -1,8 +1,9 @@
 ﻿namespace wepay.Models.DTOs
 {
-    public class UserForEmailConfirmationDto
+    public class OtpRequestDto
     {
         public string Email { get; set; }
-        public string Code {  get; set; }
+
+        public string Reason { get; set; }  
     }
 }

@@ -6,5 +6,7 @@ namespace wepay.Repository.Interface
     {
         IWalletRepository WalletRepository { get; }
         ICurrencyRepository CurrencyRepository { get; }
+
+        IOtpRepository OtpRepository { get; }
     }
 }

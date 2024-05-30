@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using wepay.EmailService;
+
 using wepay.Models;
 using wepay.Repository.Interface;
 using wepay.Service.Interface;
@@ -14,14 +14,16 @@ namespace wepay.Service
         private readonly Lazy<IAuthService> _authService;
         private readonly Lazy<IWalletService> _walletService;
         private readonly Lazy<ICurrencyService> _currencyService;
-
-
-        public ServiceManager(IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration, IEmailSender emailSender) {
-
+        private readonly Lazy<IOtpService> _otpService;
+        
+        
+        public ServiceManager(IRepositoryManager repositoryManager, SignInManager<User> signInManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration) {
+                
             _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
-            _authService = new Lazy<IAuthService>(() => new AuthService(userManager, mapper, configuration, emailSender));
+            _authService = new Lazy<IAuthService>(() => new AuthService(signInManager, userManager, mapper, configuration));
             _walletService = new Lazy<IWalletService>(() => new WalletService(repositoryManager, mapper));
             _currencyService = new Lazy<ICurrencyService>(() => new CurrencyService(repositoryManager, mapper));
+            _otpService = new Lazy<IOtpService>(() => new OtpService(repositoryManager, mapper));
         }
 
         public IUserService UserService { get {  return _userService.Value; } }
@@ -30,6 +32,8 @@ namespace wepay.Service
 
         public IWalletService WalletService {  get { return _walletService.Value; } }
 
-        public ICurrencyService CurrencyService { get { return _currencyService.Value; } }
+        public ICurrencyService CurrencyService {  get { return _currencyService.Value; } }
+
+        public IOtpService OtpService {  get { return _otpService.Value; } }
     }
 }

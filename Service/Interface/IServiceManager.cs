@@ -12,5 +12,7 @@ namespace wepay.Service.Interface
         
 
         ICurrencyService CurrencyService { get; }
+
+        IOtpService OtpService { get; }
     }
 }

@@ -19,5 +19,7 @@ namespace wepay.Repository
 
         public DbSet<Currency>? Currencies { get; set;}
 
+        public DbSet<Otp> Otps { get; set; }
+
         }
     }

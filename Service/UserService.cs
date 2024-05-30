@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using wepay.EmailService;
+
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -93,17 +93,25 @@ namespace wepay.Service
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
         }
-        public async Task<IdentityUserDto> GetUserById(string id)
+        public async Task<IdentityUserDto?> GetUserById(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
+            if(user == null)
+            {
+                return null;
+            }
             var roles = await _userManager.GetRolesAsync(user);
             var identityUser = _mapper.Map<IdentityUserDto>(user);
             identityUser.Role = roles.First();
             return identityUser;
         }
-        public async Task<IdentityUserDto> GetUserByEmail(string email)
+        public async Task<IdentityUserDto?> GetUserByEmail(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
+            if( user == null)
+            {
+                return null;
+            }
             var identityUser = _mapper.Map<IdentityUserDto>(user);
             var roles = await _userManager.GetRolesAsync(user);
             identityUser.Role = roles.First();

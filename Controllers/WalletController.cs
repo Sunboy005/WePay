@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service;
 using wepay.Service.Interface;
@@ -79,7 +80,33 @@ namespace wepay.Controllers
             return Ok();
 
         }
-        [HttpPost("change-pin")]
+
+        //[HttpPost("requesst-change-wallet-pin")]
+        //public async Task<IActionResult> RequestChangeWalletPin([FromBody][FromBody] string email,)
+        //{
+        //    var user = await _serviceManager.UserService.GetUserByEmail(email);
+        //    if (user == null)
+        //    {
+        //        return NotFound("No user found with email: " + email);
+        //    }
+
+        //    var otpRequestDto = new OtpRequestDto
+        //    {
+        //        Email = email,
+        //        Reason = nameof(OtpReasons.PasswordChange)
+        //    };
+        //    var otpCode = await _serviceManager.OtpService.CreateNewOtp(otpRequestDto);
+        //    if (string.IsNullOrEmpty(otpCode))
+        //    {
+
+        //        return BadRequest("We couldn't generate otp");
+        //    }
+
+        //    return Ok("We have sent an password change code to " + email + "with OTP code " + otpCode);
+        //}
+
+
+        [HttpPost("change-wallet-pin")]
         public async Task<IActionResult> ChangeWalletPin([FromBody] ChangeWalletPinDto changeWalletPinDto)
         {
             var result = await _serviceManager.WalletService.ChangeWalletPinAsync(changeWalletPinDto);

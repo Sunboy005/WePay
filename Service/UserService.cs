@@ -82,11 +82,13 @@ namespace wepay.Service
             if (userUpdateDto.PhoneNumber != null)
                 user.PhoneNumber = userUpdateDto.PhoneNumber;
             if (userUpdateDto.FirstName != null)
-                user.PhoneNumber = userUpdateDto.FirstName;
+                user.FirstName = userUpdateDto.FirstName;
             if (userUpdateDto.LastName != null)
-                user.PhoneNumber = userUpdateDto.LastName;
+                user.LastName = userUpdateDto.LastName;
             if (userUpdateDto.Address != null)
-                user.PhoneNumber = userUpdateDto.Address;
+                user.Address = userUpdateDto.Address;
+            if (userUpdateDto.Address != null)
+                user.ProfilePicture = userUpdateDto.Address;
 
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;

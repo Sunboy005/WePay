@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -26,7 +27,7 @@ namespace wepay.Controllers
                 return Unauthorized();
             }
 
-            return Ok(new { Token = _serviceManager.AuthService.CreateToken() });
+            return Ok();
 
         }
 
@@ -142,9 +143,17 @@ namespace wepay.Controllers
             if(identityResult.Succeeded == false)
             {
                 return BadRequest("We couldn't verify email");
-            }
+            }            
 
             return Ok();
         }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> LogOutUser([FromBody]string email) {
+           await _serviceManager.AuthService.LogoutUser();
+            return Ok();
+        }
+       
     }
 }

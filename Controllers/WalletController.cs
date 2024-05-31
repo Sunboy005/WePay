@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using wepay.Models;
 using wepay.Models.DTOs;
@@ -19,6 +20,7 @@ namespace wepay.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> CreateWallet([FromBody] WalletCreationDto walletcreationDto)
         {
             var user = await _serviceManager.UserService.GetUserById(walletcreationDto.UserId);
@@ -32,6 +34,7 @@ namespace wepay.Controllers
         }
 
         [HttpGet("id", Name = "GetWalletById")]
+        [Authorize]
         public async Task<IActionResult> GetWalletById([FromQuery] string id)
         {
             var wallet = await _serviceManager.WalletService.GetWalletById(id);
@@ -45,6 +48,7 @@ namespace wepay.Controllers
         }
 
         [HttpGet("address", Name = "GetWalletByAddress")]
+        [Authorize]
         public async Task<IActionResult> GetWalletByAddress([FromQuery] string address)
         {
             var wallet = await _serviceManager.WalletService.GetWalletByAddress(address);
@@ -58,6 +62,7 @@ namespace wepay.Controllers
         }
 
         [HttpPost("lock/{walletId}")]
+        [Authorize]
         public async Task<IActionResult> LockWallet(string walletId)
         {
             var result = await  _serviceManager.WalletService.LockWallet(walletId);
@@ -70,6 +75,7 @@ namespace wepay.Controllers
         }
 
         [HttpPost("enable/{walletId}")]
+        [Authorize]
         public async Task<IActionResult> EnableWallet( string walletId)
         {
             var result = await _serviceManager.WalletService.EnableWallet(walletId);
@@ -120,6 +126,7 @@ namespace wepay.Controllers
 
 
         [HttpGet("userId", Name ="GetWalletByUserId")]
+        [Authorize]
         public async Task<IActionResult> GetWalletByUserId(string userId)
         {
             var user = await _serviceManager.UserService.GetUserById(userId);

@@ -30,19 +30,18 @@ public class AuthService : IAuthService
     }
 
     public async Task<bool> LoginUser(UserForLoginDto userForLoginDto)
-    {
+    {                
         _user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
-        if (_user == null)
+        if (_user == null || _user.EmailConfirmed == false)
         {
             return false;
         }
+        var result = await _signInManager.PasswordSignInAsync(_user, userForLoginDto.Password, false, false);
 
-        var passwordCorrect = await _userManager.CheckPasswordAsync(_user, userForLoginDto.Password);
-
-        if (!passwordCorrect)
+        if(result.Succeeded == false)
         {
             return false;
-        }
+        }       
         return true;
     }
 
@@ -120,5 +119,8 @@ List<Claim> claims)
         return result;
     }
 
-
+    public async Task LogoutUser()
+    {
+        await _signInManager.SignOutAsync(); 
+    }
 }

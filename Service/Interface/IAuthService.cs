@@ -12,5 +12,7 @@ namespace wepay.Service.Interface
        
         Task<IdentityResult> ConfirmUserEmail(UserForEmailConfirmationDto userForEmailConfirmationDto);
         Task<string> CreateToken();
+
+        Task LogoutUser();
     }
 }

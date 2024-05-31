@@ -16,6 +16,12 @@ namespace wepay.Repository
             return currency;
         }
 
+        public async Task AddCurrency (Currency currency)
+        {
+            _repositoriesContext.Currencies.Add(currency);
+            await _repositoriesContext.SaveChangesAsync();
+        } 
+
         public async Task updateCurrency(Currency currency)
         {
             _repositoriesContext.Currencies.Update(currency);

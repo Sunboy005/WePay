@@ -16,8 +16,18 @@ namespace wepay.Service
             _mapper = mapper;
         }
 
-        
+        public async Task<Currency> AddCurrency(CurrencyToAddDto currencyToAddDto)
+        {
+            var currency = _mapper.Map<Currency>(currencyToAddDto);
+            await _repositoryManager.CurrencyRepository.AddCurrency(currency);
+            return currency;
+        }
 
+        public async Task<Currency> GetCurrencyById(string currencyId)
+        {
+            return await _repositoryManager.CurrencyRepository.getCurrencyById(currencyId);
+
+        }
         public async Task<Currency?> ChangeBaseCurrency(string currencyIdFrom,string currencyIdTo)
         {
                 var previousbase = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyIdFrom);

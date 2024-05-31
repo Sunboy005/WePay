@@ -7,5 +7,6 @@ namespace wepay.Service.Interface
     {
         Task<Currency?> ChangeBaseCurrency(string currencyIdFrom,string currencyIdTo);
         Task<Currency> AddCurrency(CurrencyToAddDto currencyToAddDto);
+        Task<Currency> GetCurrencyById(string currencyId);
     }
 }

@@ -6,5 +6,6 @@ namespace wepay.Repository.Interface
     {
         Task updateCurrency(Currency currency);
         Task<Currency> getCurrencyById(string id);
+        Task<Currency> AddCurrency(Currency currency);
     }
 }

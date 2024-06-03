@@ -51,6 +51,7 @@ namespace wepay.Controllers
             }
             return Ok(result);
         }
+        [Authorize(Roles = "")]
         [HttpDelete("delete-currency")]
         public async Task<IActionResult> DeleteCurrency([FromBody] CurrencyDeletionDto currencyDeletionDto)
         {

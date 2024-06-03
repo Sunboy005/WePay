@@ -67,5 +67,12 @@ namespace wepay.Service
         {
             return await _repositoryManager.CurrencyRepository.getCurrencyListByWalletId(walletId);
         }
+
+        public async Task<int?> GetCurrencyBalance(string currencyId)
+        {
+            var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyId);
+            var balance = currency.Balance;
+            return balance;
+        }
     }
 }

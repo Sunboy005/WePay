@@ -44,6 +44,7 @@ namespace wepay.Controllers
         [Authorize]
         public async Task<IActionResult> AddCurrency([FromBody] CurrencyToAddDto currencyToAddDto)
         {
+            
             var result = await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
             if (result == null)
             {

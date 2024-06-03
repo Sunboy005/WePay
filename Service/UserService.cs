@@ -33,6 +33,7 @@ namespace wepay.Service
 
         public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto)
         {
+            
             var userForCreation = _mapper.Map<UserCreationDto>(userForRegistrationDto);
 
             var user = _mapper.Map<User>(userForCreation);

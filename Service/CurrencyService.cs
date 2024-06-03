@@ -19,6 +19,7 @@ namespace wepay.Service
 
         public async Task<Currency> AddCurrency(CurrencyToAddDto currencyToAddDto)
         {
+
             var currency = _mapper.Map<Currency>(currencyToAddDto);
             await _repositoryManager.CurrencyRepository.AddCurrency(currency);
             return currency;

@@ -7,13 +7,13 @@ namespace wepay.Models
     {
         [Key]
         public string CurrencyId { get; set; } = Guid.NewGuid().ToString();
-        public string CurrencyName { get; set; }
+        public string Name { get; set; }
         public string ShortCode { get; set; }
-        public bool IsBase { get; set; }
-        public int Balance { get; set; }
+        public bool IsBase { get; set; } = false;
+        public int Balance { get; set; } = 0;
         public string Symbol { get; set; }
-        [Column("Id")]
-        [ForeignKey("Id")]
+        
+        [ForeignKey("WalletId")]
         public string WalletId { get; set; }
         public Wallet? wallet { get; set; }
         public DateTime DateCreated { get; set; }

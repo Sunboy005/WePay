@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wepay.Repository;
 
@@ -11,9 +12,10 @@ using wepay.Repository;
 namespace wepay.Migrations
 {
     [DbContext(typeof(RepositoriesContext))]
-    partial class RepositoriesContextModelSnapshot : ModelSnapshot
+    [Migration("20240531135925_fixedCurrencymodel")]
+    partial class fixedCurrencymodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,22 +53,22 @@ namespace wepay.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "353a1bff-693a-477e-a0b9-8846c281e3d6",
-                            ConcurrencyStamp = "71b960f6-41b2-4e3a-be76-19d8adb81d2a",
+                            Id = "8c80a996-4336-474d-b7b0-bdde84e22597",
+                            ConcurrencyStamp = "11b2b2a7-b1d6-4701-adf4-3f2591241e5c",
                             Name = "Noob",
                             NormalizedName = "NOOB"
                         },
                         new
                         {
-                            Id = "219c5aac-342c-4e53-a8fd-48678e10ea8b",
-                            ConcurrencyStamp = "3c787017-930c-48a9-85b8-52e5d3e85819",
+                            Id = "4783dec3-dfe7-4f20-9873-d7a6807476ca",
+                            ConcurrencyStamp = "12a8a856-8e9c-4205-8135-7dd9d8a7128c",
                             Name = "Elite",
                             NormalizedName = "ELITE"
                         },
                         new
                         {
-                            Id = "af287770-3810-4bd1-bfdc-52d94c42cad0",
-                            ConcurrencyStamp = "c4c2a591-5790-4da0-a88f-40f6477a5961",
+                            Id = "53220965-0e1c-471c-8808-a38f8c9a4d73",
+                            ConcurrencyStamp = "9e55a9e7-7ed7-454d-a588-9f12f2e95c53",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -180,8 +182,9 @@ namespace wepay.Migrations
 
             modelBuilder.Entity("wepay.Models.Currency", b =>
                 {
-                    b.Property<string>("CurrencyId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Id1");
 
                     b.Property<int>("Balance")
                         .HasColumnType("int");
@@ -209,9 +212,10 @@ namespace wepay.Migrations
 
                     b.Property<string>("WalletId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Id");
 
-                    b.HasKey("CurrencyId");
+                    b.HasKey("Id");
 
                     b.HasIndex("WalletId");
 

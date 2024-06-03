@@ -54,63 +54,6 @@ namespace wepay.Extensions
             );                         
         }
 
-        public static void ConfigureJWT(this IServiceCollection services, IConfiguration
-configuration)
-        {
-            var jwtSettings = configuration.GetSection("JwtSettings");
-            // var secretKey = Environment.GetEnvironmentVariable("SECRET");
-
-            var secretKey = "OUR_WEPAY_VERY_SECRET_KEY_THAT_SHOULD_NOT_LEAK_OUTSIDE_THIS_ENVIRONMENT";
-            services.AddAuthentication(opt =>
-            {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings["validIssuer"],
-                    ValidAudience = jwtSettings["validAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-                };
-            });
-        }
-
-        public static void ConfigureSwagger(this IServiceCollection services)
-        {
-            services.AddSwaggerGen(s =>
-            {
-                s.AddSecurityDefinition("token", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "Place to add JWT with Bearer",
-                    Name = "Authorization",
-                    BearerFormat = "JWT",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                s.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                {
-                    {
-                        new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "token"
-                        },
-                        Name = "Bearer",
-                    },
-                    new List<string>()}
-                });
-
-            });
-        }
+     
     }
 }

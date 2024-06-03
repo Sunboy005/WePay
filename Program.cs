@@ -1,25 +1,14 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using wepay.Extensions;
-using wepay.Models;
-using wepay.Service.Interface;
-using wepay.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 builder.Services.AddAutoMapper(typeof(Program));
-
-builder.Services.ConfigureSwagger();
 
 builder.Services.ConfigureApplicationsCookie();
 
 builder.Services.AddAuthentication();
 
 builder.Services.ConfigureIdentity();
-
-// builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.ConfigureRepositoryManager();
 
@@ -45,7 +34,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 
-app.UseHttpsRedirection();
+ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

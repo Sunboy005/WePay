@@ -30,7 +30,7 @@ namespace wepay.Service
             return result;
         }
 
-        public async Task<Wallet> EnableWallet(string walletId)
+        public async Task<Wallet?> EnableWallet(string walletId)
         {
             var wallet = await _repositoryManager.WalletRepository.getWalletById(walletId);
             if (wallet == null)
@@ -42,21 +42,21 @@ namespace wepay.Service
             return wallet;
         }
 
-        public async Task<WalletDto> GetWalletByAddress(string address)
+        public async Task<WalletDto?> GetWalletByAddress(string address)
         {
             var walletEntity = await _repositoryManager.WalletRepository.getWalletByAddress(address);
             var walletDto = _mapper.Map<WalletDto>(walletEntity);
             return walletDto;
         }
 
-        public async Task<WalletDto> GetWalletById(string id)
+        public async Task<WalletDto?> GetWalletById(string id)
         {
             var walletEntity =await _repositoryManager.WalletRepository.getWalletById(id);
             var walletDto= _mapper.Map<WalletDto>(walletEntity);
             return walletDto;
         }
 
-        public async Task<WalletDto> GetWalletByUserId(string userId)
+        public async Task<WalletDto?> GetWalletByUserId(string userId)
         {
             var wallet = await _repositoryManager.WalletRepository.GetWalletByUserId(userId);
 
@@ -65,7 +65,7 @@ namespace wepay.Service
             return walletDto;
         }
 
-        public async Task<Wallet> LockWallet(string walletId)
+        public async Task<Wallet?> LockWallet(string walletId)
         {
          var wallet = await _repositoryManager.WalletRepository.getWalletById(walletId);
         if (wallet == null) {
@@ -85,6 +85,11 @@ namespace wepay.Service
             wallet.Pin = changeWalletPinDto.Pin;
             _repositoryManager.WalletRepository.updateWallet(wallet);
             return true;
+        }
+
+        public Task<Wallet> GetWalletBallance(string walletId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

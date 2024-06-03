@@ -18,7 +18,8 @@ namespace wepay.Service
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-     
+        
+
 
         private User _user;
 
@@ -131,6 +132,12 @@ namespace wepay.Service
             if (result.Succeeded)
                 await _userManager.AddToRolesAsync(admin, adminForCreation.Role);
             return result;
+        }
+
+        public async Task<string> GetRoleOfUser(User user)
+        {
+            var roles =  await _userManager.GetRolesAsync (user);
+            return roles.First();
         }
     }
 }

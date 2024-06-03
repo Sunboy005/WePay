@@ -62,5 +62,10 @@ namespace wepay.Service
             await _repositoryManager.CurrencyRepository.deleteCurrency(currency);
             return true;
         }
+
+        public async Task<List<Currency>>? GetCurrencyListByWalletId(string walletId)
+        {
+            return await _repositoryManager.CurrencyRepository.getCurrencyListByWalletId(walletId);
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Claims;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -14,11 +14,12 @@ namespace wepay.Controllers
 
     {
         private readonly IServiceManager _serviceManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-        public UserController(IServiceManager serviceManager)
+        public UserController(IServiceManager serviceManager, IHttpContextAccessor httpContextAccessor)
         {
             _serviceManager = serviceManager;
+            _httpContextAccessor = httpContextAccessor; 
         }
 
 
@@ -112,7 +113,7 @@ namespace wepay.Controllers
 
             return StatusCode(201);
 
-        }
+        }       
     }
 }
     

@@ -131,7 +131,13 @@ namespace wepay.Service
             if (result.Succeeded)
                 await _userManager.AddToRolesAsync(admin, adminForCreation.Role);
             return result;
-        }              
+        }
+
+        public async Task<string> GetRoleOfUser(User user)
+        {
+            var roles =  await _userManager.GetRolesAsync (user);
+            return roles.First();
+        }
     }
 }
 

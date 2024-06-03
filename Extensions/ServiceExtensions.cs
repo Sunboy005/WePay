@@ -43,6 +43,17 @@ namespace wepay.Extensions
             .AddDefaultTokenProviders; 
         }
 
+        public static void ConfigureApplicationsCookie(this IServiceCollection services)
+        {
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+
+            }
+            );                         
+        }
+
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration
 configuration)
         {

@@ -51,8 +51,6 @@ namespace wepay.Service
 
             public async Task<bool> DeleteUser(UserDeletionDto userDeletionDto)
             {
-
-
                 var user = await _userManager.FindByEmailAsync(userDeletionDto.Email);
                 if (user == null)
                 {

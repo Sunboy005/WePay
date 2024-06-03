@@ -1,4 +1,6 @@
-﻿namespace wepay.Models.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace wepay.Models.DTOs
 {
     public class UserCreationDto : BaseEntity
     {
@@ -20,7 +22,7 @@
         public bool IsActive { get; set; } = true;
 
         public bool IsDeleted { get; set; } = false;
-
+        
         public string Password { get; set; }
         public IEnumerable<string> Role { get; set; } = new List<string>() { "Noob" };
     }

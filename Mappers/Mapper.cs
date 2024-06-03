@@ -20,6 +20,7 @@ namespace wepay.Mappers
             CreateMap<WalletCreationDto, Wallet>();
             CreateMap<Wallet, WalletDto>();
             CreateMap<OtpRequestDto, Otp>();
+            CreateMap<CurrencyToAddDto, Currency>();
         }
     }
 }

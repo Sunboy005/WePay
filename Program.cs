@@ -13,11 +13,13 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.ConfigureSwagger();
 
+builder.Services.ConfigureApplicationsCookie();
+
 builder.Services.AddAuthentication();
 
 builder.Services.ConfigureIdentity();
 
-builder.Services.ConfigureJWT(builder.Configuration);
+// builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.ConfigureRepositoryManager();
 

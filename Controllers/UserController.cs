@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using wepay.Models;
 using wepay.Models.DTOs;
@@ -22,6 +23,7 @@ namespace wepay.Controllers
 
 
         [HttpGet("id", Name = "GetUserById" )]
+        [Authorize]
         public async Task<IActionResult> GetUserById( [FromQuery] string id)
         {
             var identityUser = await _serviceManager.UserService.GetUserById(id);
@@ -35,6 +37,7 @@ namespace wepay.Controllers
         }
 
         [HttpGet("email", Name = "GetUserByEmail")]
+        [Authorize]
         public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
         {
 
@@ -66,6 +69,7 @@ namespace wepay.Controllers
 
 
         [HttpDelete("delete-user")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser([FromBody]UserDeletionDto userDeletionDto)
         {
             var result = await _serviceManager.UserService.DeleteUser(userDeletionDto);
@@ -78,6 +82,7 @@ namespace wepay.Controllers
         }
 
         [HttpPatch("update-user/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto userUpdateDto)
         {
             var result = await _serviceManager.UserService.UpdateUserAsync(id, userUpdateDto);

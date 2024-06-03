@@ -5,7 +5,9 @@ namespace wepay.Service.Interface
 {
     public interface ICurrencyService
     {
-        Task<Currency> ChangeBaseCurrency(string currencyIdFrom,string currencyIdTo);
+        Task<Currency?> ChangeBaseCurrency(string currencyIdFrom,string currencyIdTo);
+        Task<Currency> AddCurrency(CurrencyToAddDto currencyToAddDto);
+        Task<Currency> GetCurrencyById(string currencyId);
         Task<bool> DeleteCurrency(CurrencyDeletionDto currencyDeletionDto);
     }
 }

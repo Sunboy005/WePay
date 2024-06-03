@@ -8,7 +8,8 @@ namespace wepay.Service.Interface
         Task<Currency?> ChangeBaseCurrency(string currencyIdFrom,string currencyIdTo);
         Task<Currency> AddCurrency(CurrencyToAddDto currencyToAddDto);
         Task<Currency> GetCurrencyById(string currencyId);
-        Task<List<Currency>>? GetCurrencyListByWalletId(string walletId);<
+        Task<List<Currency>>? GetCurrencyListByWalletId(string walletId);
         Task<bool> DeleteCurrency(CurrencyDeletionDto currencyDeletionDto);
+        Task<int?> GetCurrencyBalance( string currencyId);
     }
 }

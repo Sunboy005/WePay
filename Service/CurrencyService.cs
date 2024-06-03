@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using wepay.Models;
+using wepay.Models.DTOs;
 using wepay.Repository.Interface;
 using wepay.Service.Interface;
 
@@ -34,6 +36,18 @@ namespace wepay.Service
                 newbase.IsBase = true;
                 await  _repositoryManager.CurrencyRepository.updateCurrency(newbase);
                 return newbase;
+        }
+
+        public async Task<bool> DeleteCurrency(CurrencyDeletionDto currencyDeletionDto)
+        {
+            var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyDeletionDto.CurencyId);
+            if (currency == null)
+            {
+                return false;
+            }
+
+            await _repositoryManager.CurrencyRepository.deleteCurrency(currency);
+            return true;
         }
     }
 }

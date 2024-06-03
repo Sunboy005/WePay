@@ -28,16 +28,16 @@ namespace wepay.Controllers
 
         }
 
-        //[HttpDelete("delete-currency")]
-        //public async Task<IActionResult> DeleteCurrency([FromBody] CurrencyDeletionDto currencyDeletionDto)
-        //{
-        //    var result = await _serviceManager.CurrencyService.DeleteCurrency(currencyDeletionDto);
-        //    if (result == false)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpDelete("delete-currency")]
+        public async Task<IActionResult> DeleteCurrency([FromBody] CurrencyDeletionDto currencyDeletionDto)
+        {
+            var result = await _serviceManager.CurrencyService.DeleteCurrency(currencyDeletionDto);
+            if (result == false)
+            {
+                return BadRequest();
+            }
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
     }
 }

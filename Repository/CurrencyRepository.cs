@@ -21,5 +21,11 @@ namespace wepay.Repository
             _repositoriesContext.Currencies.Update(currency);
            await _repositoriesContext.SaveChangesAsync();
         }
+
+        public async Task deleteCurrency(Currency currency)
+        {
+            _repositoriesContext.Currencies.Remove(currency);
+            await _repositoriesContext.SaveChangesAsync();
+        }
     }
 }

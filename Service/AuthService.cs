@@ -121,6 +121,7 @@ List<Claim> claims)
 
     public async Task LogoutUser()
     {
+        
         await _signInManager.SignOutAsync(); 
     }
 }

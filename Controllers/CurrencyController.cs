@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
 
@@ -44,14 +42,16 @@ namespace wepay.Controllers
         [Authorize]
         public async Task<IActionResult> AddCurrency([FromBody] CurrencyToAddDto currencyToAddDto)
         {
+            
             var result = await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
             if (result == null)
             {
                 return BadRequest();
             }
             return Ok(result);
-        }
+        }        
         [HttpDelete("delete-currency")]
+        [Authorize]
         public async Task<IActionResult> DeleteCurrency([FromBody] CurrencyDeletionDto currencyDeletionDto)
         {
             var result = await _serviceManager.CurrencyService.DeleteCurrency(currencyDeletionDto);
@@ -64,6 +64,7 @@ namespace wepay.Controllers
         }
 
         [HttpGet("getCurrencyListByWalletId")]
+        [Authorize]
         public async Task<IActionResult> GetCurrencyListByWalletId([FromQuery] string walletId)
         {
             var currency = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(walletId);

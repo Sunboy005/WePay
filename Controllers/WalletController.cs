@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service;
@@ -24,7 +25,7 @@ namespace wepay.Controllers
         public async Task<IActionResult> CreateWallet([FromBody] WalletCreationDto walletcreationDto)
         {
             var user = await _serviceManager.UserService.GetUserById(walletcreationDto.UserId);
-            if(user == null)
+            if (user == null)
             {
                 return NotFound(ModelState);
             }
@@ -65,7 +66,7 @@ namespace wepay.Controllers
         [Authorize]
         public async Task<IActionResult> LockWallet(string walletId)
         {
-            var result = await  _serviceManager.WalletService.LockWallet(walletId);
+            var result = await _serviceManager.WalletService.LockWallet(walletId);
             if (result == null)
             {
                 return NotFound();
@@ -76,7 +77,7 @@ namespace wepay.Controllers
 
         [HttpPost("enable/{walletId}")]
         [Authorize]
-        public async Task<IActionResult> EnableWallet( string walletId)
+        public async Task<IActionResult> EnableWallet(string walletId)
         {
             var result = await _serviceManager.WalletService.EnableWallet(walletId);
             if (result == null)
@@ -125,7 +126,7 @@ namespace wepay.Controllers
 
 
 
-        [HttpGet("userId", Name ="GetWalletByUserId")]
+        [HttpGet("userId", Name = "GetWalletByUserId")]
         [Authorize]
         public async Task<IActionResult> GetWalletByUserId(string userId)
         {
@@ -137,7 +138,7 @@ namespace wepay.Controllers
             }
 
             var wallet = await _serviceManager.WalletService.GetWalletByUserId(userId);
-            if(wallet == null)
+            if (wallet == null)
             {
                 return NotFound("User with " + userId + "does not have a wallet");
             }
@@ -146,6 +147,35 @@ namespace wepay.Controllers
 
         }
 
+        [HttpGet("balance/{walletId}")]
+        [Authorize]
+        public async Task<IActionResult> GetWalletBalance(string walletId)
+        {
+            var wallet = await _serviceManager.WalletService.GetWalletById(walletId);
+            if (wallet == null)
+            {
+                return NotFound("No wallet found");
+            }
+            var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(walletId);
+            if (currencies.IsNullOrEmpty())
+            {
+                return NotFound("No currencies found");
+            }         
+            var balance = 0;
+            var rate = 1500;
 
+            foreach (var currency in currencies)
+            {
+                if (currency.IsBase)
+                {
+                    balance = balance + currency.Balance;
+                }
+                else
+                {
+                    balance = balance + (rate * currency.Balance);
+                }
+            }
+            return Ok(balance);
+        }
     }
 }

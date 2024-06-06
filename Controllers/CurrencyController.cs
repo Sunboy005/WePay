@@ -42,13 +42,55 @@ namespace wepay.Controllers
         [Authorize]
         public async Task<IActionResult> AddCurrency([FromBody] CurrencyToAddDto currencyToAddDto)
         {
-            
+            var user = await _serviceManager.UserService.GetUserByEmail(currencyToAddDto.UserEmail);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var userRole = user.Role;
+            if(userRole == "Noob")
+            {
+                var wallet = await _serviceManager.WalletService.GetWalletByUserId(user.Id);
+                if (wallet == null)
+                {
+                    return NotFound();
+                }
+                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(wallet.WalletId);
+                if(currencies.Count == 0)
+                {
+                    await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                
+            }
+            else if (userRole == "Elite")
+            {
+                var wallet = await _serviceManager.WalletService.GetWalletByUserId(user.Id);
+                if(wallet == null)
+                {
+                    return NotFound();
+                }
+                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(wallet.WalletId);
+                if(currencies.Count == 0)
+                {
+                    await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
+                }
+                else if(currencies.Count >= 1)
+                {
+                    await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
+                }
+            }
             var result = await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
             if (result == null)
             {
                 return BadRequest();
             }
             return Ok(result);
+            
+         
         }        
         [HttpDelete("delete-currency")]
         [Authorize]
@@ -75,7 +117,7 @@ namespace wepay.Controllers
             return Ok(currency);
         }
 
-        [HttpGet("getCurrencyBalancebyWalletId")]
+        [HttpGet("getCurrencyBalance")]
         public async Task<IActionResult> GetCurrencyBalance([FromQuery] string currencyId)
         {
             var currency = await _serviceManager.CurrencyService.GetCurrencyBalance( currencyId);

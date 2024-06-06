@@ -91,5 +91,12 @@ namespace wepay.Service
         {
             throw new NotImplementedException();
         }
+
+        public async Task<string> GetUserByWalletAddress(string address)
+        {
+            var user = await _repositoryManager.WalletRepository.getWalletByAddress(address);
+            var name = user.user.FirstName;
+            return name;
+        }
     }
 }

@@ -13,8 +13,8 @@ namespace wepay.Models
         public int Balance { get; set; } = 0;
         public string Symbol { get; set; }
         
-        [ForeignKey("WalletId")]
-        public string WalletId { get; set; }
+        [ForeignKey("Address")]
+        public string WalletAddress { get; set; }
         public Wallet? wallet { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; } = DateTime.Now;

@@ -87,9 +87,29 @@ namespace wepay.Service
             return true;
         }
 
-        public Task<Wallet> GetWalletBallance(string walletId)
+        public int GetWalletBallance(List<Currency> currencies)
         {
-            throw new NotImplementedException();
+            var balance = 0;
+            var rate = 1500;
+
+            foreach (var currency in currencies)
+            {
+                if (currency.IsBase)
+                {
+                    balance = balance + currency.Balance;
+                }
+                else
+                {
+                    balance = balance + (rate * currency.Balance);
+                }
+            }
+
+            return balance;
         }
+
+        //public async Task<bool> TransferMoneyWithinWallet()
+        //{
+
+        //}
     }
 }

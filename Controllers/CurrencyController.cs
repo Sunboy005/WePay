@@ -67,7 +67,7 @@ namespace wepay.Controllers
         [Authorize]
         public async Task<IActionResult> GetCurrencyListByWalletId([FromQuery] string walletId)
         {
-            var currency = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(walletId);
+            var currency = await _serviceManager.CurrencyService.GetCurrencyListByWalletAddress(walletId);
             if (currency == null)
             {
                 return NotFound();

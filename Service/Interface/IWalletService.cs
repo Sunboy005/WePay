@@ -13,6 +13,6 @@ namespace wepay.Service.Interface
         Task<Wallet?> EnableWallet(String walletId);
         Task<WalletDto?>GetWalletByUserId(string userId);
         Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto);
-        Task<Wallet> GetWalletBallance(String walletId);
+        int GetWalletBallance(List<Currency> currencies);
     }
 }

@@ -156,26 +156,35 @@ namespace wepay.Controllers
             {
                 return NotFound("No wallet found");
             }
-            var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(walletId);
+            var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletAddress(walletId);
             if (currencies.IsNullOrEmpty())
             {
                 return NotFound("No currencies found");
-            }         
-            var balance = 0;
-            var rate = 1500;
-
-            foreach (var currency in currencies)
-            {
-                if (currency.IsBase)
-                {
-                    balance = balance + currency.Balance;
-                }
-                else
-                {
-                    balance = balance + (rate * currency.Balance);
-                }
-            }
+            }    
+            
+            var balance = _serviceManager.WalletService.GetWalletBallance(currencies);
+           
             return Ok(balance);
         }
+
+        //[HttpPost("transfer-within-wallet")]
+        //[Authorize]
+        //public async Task<IActionResult> TransferMoneyWithinWallet([FromBody] TransferWithinWalletDto transferWithinWalletDto)
+        //{
+        //    var wallet = await _serviceManager.WalletService.GetWalletByAddress(transferWithinWalletDto.WalletAddress);
+        //    if (wallet == null)
+        //    {
+        //        return NotFound("Wallet not found");
+        //    }
+        //    var currencyFrom = await  _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyFromShortCode);
+        //    var currentyTo = await _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyToShortCode);
+        //    if(currencyFrom == null || currentyTo == null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    var result = _serviceManager.WalletService.
+
+
+        //}
     }
 }

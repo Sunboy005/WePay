@@ -63,9 +63,9 @@ namespace wepay.Service
             return true;
         }
 
-        public async Task<List<Currency>>? GetCurrencyListByWalletId(string walletId)
+        public async Task<List<Currency>>? GetCurrencyListByWalletAddress(string walletAddress)
         {
-            return await _repositoryManager.CurrencyRepository.getCurrencyListByWalletId(walletId);
+            return await _repositoryManager.CurrencyRepository.getCurrencyListByWalletAddress(walletAddress);
         }
 
         public async Task<int?> GetCurrencyBalance(string currencyId)
@@ -73,6 +73,12 @@ namespace wepay.Service
             var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyId);
             var balance = currency.Balance;
             return balance;
+        }
+
+        public async  Task<Currency?> GetCurrencyByShortCodeForAWallet(string walletAddress, string shortCode)
+        {
+            var currency = await _repositoryManager.CurrencyRepository.GetCurrencyByShortCodeForAWallet(walletAddress, shortCode);
+            return currency;
         }
     }
 }

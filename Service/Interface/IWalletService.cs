@@ -15,5 +15,6 @@ namespace wepay.Service.Interface
         Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto);
         Task<Wallet> GetWalletBallance(String walletId);
         Task<string> GetUserByWalletAddress(string address);
+        Task<bool> ReceiveMoney(string CurrencyId, int amount, int rate);
     }
 }

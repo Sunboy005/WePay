@@ -98,5 +98,17 @@ namespace wepay.Service
             var name = user.user.FirstName;
             return name;
         }
+        public async Task<bool> ReceiveMoney (string CurrencyId, int amount, int rate)
+        {
+            var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(CurrencyId);
+            if (currency == null)
+            {
+                return false ;
+            }
+            currency.Balance = currency.Balance + (amount * rate);
+            await _repositoryManager.CurrencyRepository.updateCurrency(currency);
+            return true;
+           
+        }
     }
 }

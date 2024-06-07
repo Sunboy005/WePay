@@ -11,6 +11,7 @@ namespace wepay.Repository.Interface
 
        Task<Wallet>CreateWallet(Wallet wallet);
         Task<Wallet>GetWalletByUserId(string userId);
+       
 
     }
 }

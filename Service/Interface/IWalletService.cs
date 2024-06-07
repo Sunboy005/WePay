@@ -14,5 +14,7 @@ namespace wepay.Service.Interface
         Task<WalletDto?>GetWalletByUserId(string userId);
         Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto);
         int GetWalletBallance(List<Currency> currencies);
+        Task<bool> TransferMoneyWithinWallet(Currency currencyFrom, Currency currencyTo, int amount);
+
     }
 }

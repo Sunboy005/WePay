@@ -55,8 +55,8 @@ namespace wepay.Controllers
                 {
                     return NotFound();
                 }
-                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(wallet.WalletId);
-                if(currencies.Count == 0)
+                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletAddress(wallet.Address);
+                if (currencies.Count == 0)
                 {
                     await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
                 }
@@ -73,7 +73,7 @@ namespace wepay.Controllers
                 {
                     return NotFound();
                 }
-                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(wallet.WalletId);
+                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletAddress(wallet.Address);
                 if(currencies.Count == 0)
                 {
                     await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);

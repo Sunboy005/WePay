@@ -107,9 +107,14 @@ namespace wepay.Service
             return balance;
         }
 
-        //public async Task<bool> TransferMoneyWithinWallet()
-        //{
-
-        //}
+        public async Task<bool> TransferMoneyWithinWallet(Currency currencyFrom, Currency currencyTo, int amount)
+        {
+            var rate = 1000;
+            currencyFrom.Balance = currencyFrom.Balance - amount;
+            currencyTo.Balance = currencyTo.Balance + (amount * rate);  
+            await _repositoryManager.CurrencyRepository.updateCurrency(currencyTo);
+            await _repositoryManager.CurrencyRepository.updateCurrency(currencyFrom);
+            return true;
+        }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using wepay.Models;
 using wepay.Models.DTOs;
-using wepay.Service;
 using wepay.Service.Interface;
 
 namespace wepay.Controllers
@@ -160,31 +157,43 @@ namespace wepay.Controllers
             if (currencies.IsNullOrEmpty())
             {
                 return NotFound("No currencies found");
-            }    
-            
+            }
+
             var balance = _serviceManager.WalletService.GetWalletBallance(currencies);
-           
+
             return Ok(balance);
         }
 
-        //[HttpPost("transfer-within-wallet")]
-        //[Authorize]
-        //public async Task<IActionResult> TransferMoneyWithinWallet([FromBody] TransferWithinWalletDto transferWithinWalletDto)
-        //{
-        //    var wallet = await _serviceManager.WalletService.GetWalletByAddress(transferWithinWalletDto.WalletAddress);
-        //    if (wallet == null)
-        //    {
-        //        return NotFound("Wallet not found");
-        //    }
-        //    var currencyFrom = await  _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyFromShortCode);
-        //    var currentyTo = await _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyToShortCode);
-        //    if(currencyFrom == null || currentyTo == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var result = _serviceManager.WalletService.
+        [HttpPost("transfer-within-wallet")]
+        [Authorize]
+        public async Task<IActionResult> TransferMoneyWithinWallet([FromBody] TransferWithinWalletDto transferWithinWalletDto)
+        {
+            var wallet = await _serviceManager.WalletService.GetWalletByAddress(transferWithinWalletDto.WalletAddress);
+            if (wallet == null)
+            {
+                return BadRequest();
+            }
+            var currencyFrom = await _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyFromShortCode);
+            var currentyTo = await _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyToShortCode);
+            if (currencyFrom == null || currentyTo == null)
+            {
+                return BadRequest();
+            }
 
+            if (currencyFrom.Balance < transferWithinWalletDto.Amount)
+            {
+                return BadRequest();
+            }
+            var result = await _serviceManager.WalletService.TransferMoneyWithinWallet(currencyFrom, currentyTo, transferWithinWalletDto.Amount);
+            if (result == true)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
 
-        //}
+        }
     }
 }

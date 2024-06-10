@@ -35,19 +35,6 @@ namespace wepay.Repository
             await _repositoriesContext.SaveChangesAsync();
         }
 
-        public async Task<List<Currency>>? getCurrencyListByWalletAddress(string walletAddress)
-        {
-            var currency =  _repositoriesContext.Currencies.Where(currency=> currency.WalletAddress == walletAddress).ToList();
-                
-            return currency;
-        }
 
-        public async Task<Currency?> GetCurrencyByShortCodeForAWallet(string walletAddress, string shortCode)
-        {
-            var currency =   _repositoriesContext.Currencies.Where(currency => currency.ShortCode == shortCode && currency.WalletAddress == walletAddress).FirstOrDefault(); 
-            return currency;
-
-            
-        }
     }
 }

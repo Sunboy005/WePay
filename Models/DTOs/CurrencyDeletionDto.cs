@@ -2,6 +2,6 @@
 {
     public class CurrencyDeletionDto
     {
-        public string CurencyId { get; set; }
+        public string CurrencyId { get; set; }
     }
 }

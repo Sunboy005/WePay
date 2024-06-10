@@ -9,6 +9,7 @@ namespace wepay.Service.Interface
         IAuthService AuthService { get; }
 
         IWalletService WalletService { get; }
+        IWalletCurrencyService WalletCurrencyService { get; }
         
 
         ICurrencyService CurrencyService { get; }

@@ -10,8 +10,12 @@ namespace wepay.Models
         public string Name { get; set; }
         public string ShortCode { get; set; }
         public bool IsBase { get; set; } = false;
+        public int Balance { get; set; } = 0;
         public string Symbol { get; set; }
-        public DateTime DateCreated { get; set; }
-        public DateTime DateModified { get; set; } = DateTime.Now;
+        public List <WalletCurrency> WalletCurrencies { get; set; }
+        public Currency()
+        {
+            WalletCurrencies = new List<WalletCurrency>();
+        }
     }
 }

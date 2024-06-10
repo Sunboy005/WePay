@@ -41,27 +41,22 @@ namespace wepay.Service
             return wallet;
         }
 
-        public async Task<WalletDto?> GetWalletByAddress(string address)
+        public async Task<Wallet?> GetWalletByAddress(string address)
         {
             var walletEntity = await _repositoryManager.WalletRepository.getWalletByAddress(address);
-            var walletDto = _mapper.Map<WalletDto>(walletEntity);
-            return walletDto;
+            return walletEntity;
         }
 
-        public async Task<WalletDto?> GetWalletById(string id)
+        public async Task<Wallet?> GetWalletById(string id)
         {
-            var walletEntity = await _repositoryManager.WalletRepository.getWalletById(id);
-            var walletDto = _mapper.Map<WalletDto>(walletEntity);
-            return walletDto;
+            var walletEntity =await _repositoryManager.WalletRepository.getWalletById(id);           
+            return walletEntity;
         }
 
-        public async Task<WalletDto?> GetWalletByUserId(string userId)
+        public async Task<Wallet?> GetWalletByUserId(string userId)
         {
-            var wallet = await _repositoryManager.WalletRepository.GetWalletByUserId(userId);
-
-            var walletDto = _mapper.Map<WalletDto>(wallet);
-
-            return walletDto;
+            var wallet = await _repositoryManager.WalletRepository.GetWalletByUserId(userId);          
+            return wallet;
         }
 
         public async Task<Wallet?> LockWallet(string walletId)
@@ -125,13 +120,13 @@ namespace wepay.Service
         }
         public async Task<bool> ReceiveMoney(string CurrencyId, int amount, int rate)
         {
-            var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(CurrencyId);
+            var currency = await _repositoryManager.WalletCurrencyRepository.getWalletCurrencyById(CurrencyId);
             if (currency == null)
             {
                 return false;
             }
             currency.Balance = currency.Balance + (amount * rate);
-            await _repositoryManager.CurrencyRepository.updateCurrency(currency);
+            await _repositoryManager.WalletCurrencyRepository.updateWalletCurrency(currency);
             return true;
 
         }

@@ -22,6 +22,7 @@ namespace wepay.Repository
         public DbSet<Otp> Otps { get; set; }
 
         public DbSet<WalletCurrency> WalletCurrencies { get; set; } 
+        public DbSet<Transaction> Transactions { get; set; }
 
         }
     }

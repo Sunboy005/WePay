@@ -20,7 +20,7 @@ namespace wepay.Controllers
         [Authorize]
         public async Task<IActionResult> ChangeBaseCurrency(string currencyIdFrom, string currencyIdTo)
         {
-            var result = await _serviceManager.CurrencyService.ChangeBaseCurrency(currencyIdFrom,currencyIdTo);
+            var result = await _serviceManager.WalletCurrencyService.ChangeBaseCurrency(currencyIdFrom,currencyIdTo);
             if (result == null)
             {
                 return NotFound();
@@ -39,49 +39,13 @@ namespace wepay.Controllers
             return Ok(currency);
         }
         [HttpPost("Add-Currency")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCurrency([FromBody] CurrencyToAddDto currencyToAddDto)
         {
             var user = await _serviceManager.UserService.GetUserByEmail(currencyToAddDto.UserEmail);
             if (user == null)
             {
                 return NotFound();
-            }
-            var userRole = user.Role;
-            if(userRole == "Noob")
-            {
-                var wallet = await _serviceManager.WalletService.GetWalletByUserId(user.Id);
-                if (wallet == null)
-                {
-                    return NotFound();
-                }
-                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(wallet.WalletId);
-                if(currencies.Count == 0)
-                {
-                    await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
-                }
-                else
-                {
-                    return BadRequest();
-                }
-                
-            }
-            else if (userRole == "Elite")
-            {
-                var wallet = await _serviceManager.WalletService.GetWalletByUserId(user.Id);
-                if(wallet == null)
-                {
-                    return NotFound();
-                }
-                var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(wallet.WalletId);
-                if(currencies.Count == 0)
-                {
-                    await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
-                }
-                else if(currencies.Count >= 1)
-                {
-                    await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
-                }
             }
             var result = await _serviceManager.CurrencyService.AddCurrency(currencyToAddDto);
             if (result == null)
@@ -105,22 +69,11 @@ namespace wepay.Controllers
 
         }
 
-        [HttpGet("getCurrencyListByWalletId")]
-        [Authorize]
-        public async Task<IActionResult> GetCurrencyListByWalletId([FromQuery] string walletId)
-        {
-            var currency = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(walletId);
-            if (currency == null)
-            {
-                return NotFound();
-            }
-            return Ok(currency);
-        }
 
         [HttpGet("getCurrencyBalance")]
         public async Task<IActionResult> GetCurrencyBalance([FromQuery] string currencyId)
         {
-            var currency = await _serviceManager.CurrencyService.GetCurrencyBalance( currencyId);
+            var currency = await _serviceManager.WalletCurrencyService.GetWalletCurrencyBalance( currencyId);
             if (currency == null)
             {
                 return NotFound();

@@ -156,7 +156,7 @@ namespace wepay.Controllers
             {
                 return NotFound("No wallet found");
             }
-            var currencies = await _serviceManager.CurrencyService.GetCurrencyListByWalletId(walletId);
+            var currencies = wallet.WalletCurrencies;
             if (currencies.IsNullOrEmpty())
             {
                 return NotFound("No currencies found");

@@ -30,30 +30,10 @@ namespace wepay.Service
             return await _repositoryManager.CurrencyRepository.getCurrencyById(currencyId);
 
         }
-        public async Task<Currency?> ChangeBaseCurrency(string currencyIdFrom,string currencyIdTo)
-        {
-                var previousbase = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyIdFrom);
-                if (previousbase == null)
-                {
-                    return null;
-                }        
-                    
-                var newbase = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyIdTo);
-                if (newbase == null)
-                {
-                return null;
-                }
-
-                previousbase.IsBase = false;
-                await _repositoryManager.CurrencyRepository.updateCurrency(previousbase);
-                newbase.IsBase = true;
-                await  _repositoryManager.CurrencyRepository.updateCurrency(newbase);
-                return newbase;
-        }
 
         public async Task<bool> DeleteCurrency(CurrencyDeletionDto currencyDeletionDto)
         {
-            var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyDeletionDto.CurencyId);
+            var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyDeletionDto.CurrencyId);
             if (currency == null)
             {
                 return false;
@@ -63,16 +43,5 @@ namespace wepay.Service
             return true;
         }
 
-        public async Task<List<Currency>>? GetCurrencyListByWalletId(string walletId)
-        {
-            return await _repositoryManager.CurrencyRepository.getCurrencyListByWalletId(walletId);
-        }
-
-        public async Task<int?> GetCurrencyBalance(string currencyId)
-        {
-            var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(currencyId);
-            var balance = currency.Balance;
-            return balance;
-        }
     }
 }

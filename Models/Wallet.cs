@@ -8,8 +8,6 @@ namespace wepay.Models
         [Key]
         public string WalletId { get; set; } = Guid.NewGuid().ToString();
         public string Address { get; set; }
-        [Column("Id")]
-        [ForeignKey("Id")]
         public string UserId { get; set; }
         public User? user { get; set; }
         public bool IsLocked { get; set; } = false;
@@ -18,5 +16,10 @@ namespace wepay.Models
         public string Pin { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime DateModified { get; set; } = DateTime.Now;
+        public List<WalletCurrency> WalletCurrencies { get; set; }
+        public Wallet()
+        {
+            WalletCurrencies = new List<WalletCurrency>();   
+        }
     }
 }

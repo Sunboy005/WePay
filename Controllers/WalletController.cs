@@ -195,5 +195,18 @@ namespace wepay.Controllers
             }
 
         }
+
+        [HttpGet("Name/Address")]
+        public async Task<IActionResult> GetUserByWalletAddress([FromQuery] string address)
+        {
+            var user = await _serviceManager.WalletService.GetUserByWalletAddress(address); 
+            if(user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        } 
+
+
     }
 }

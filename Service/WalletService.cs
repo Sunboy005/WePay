@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using System.Net;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Repository.Interface;
@@ -13,10 +11,11 @@ namespace wepay.Service
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public WalletService(IRepositoryManager repositoryManager, IMapper mapper) { 
+        public WalletService(IRepositoryManager repositoryManager, IMapper mapper)
+        {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
-                }
+        }
 
         public async Task<Wallet> CreateWallet(WalletCreationDto walletcreationDto)
         {
@@ -51,8 +50,8 @@ namespace wepay.Service
 
         public async Task<WalletDto?> GetWalletById(string id)
         {
-            var walletEntity =await _repositoryManager.WalletRepository.getWalletById(id);
-            var walletDto= _mapper.Map<WalletDto>(walletEntity);
+            var walletEntity = await _repositoryManager.WalletRepository.getWalletById(id);
+            var walletDto = _mapper.Map<WalletDto>(walletEntity);
             return walletDto;
         }
 
@@ -67,10 +66,11 @@ namespace wepay.Service
 
         public async Task<Wallet?> LockWallet(string walletId)
         {
-         var wallet = await _repositoryManager.WalletRepository.getWalletById(walletId);
-        if (wallet == null) {
+            var wallet = await _repositoryManager.WalletRepository.getWalletById(walletId);
+            if (wallet == null)
+            {
                 return wallet;
-        }
+            }
             wallet.IsLocked = true;
             _repositoryManager.WalletRepository.updateWallet(wallet);
             return wallet;
@@ -111,7 +111,7 @@ namespace wepay.Service
         {
             var rate = 1000;
             currencyFrom.Balance = currencyFrom.Balance - amount;
-            currencyTo.Balance = currencyTo.Balance + (amount * rate);  
+            currencyTo.Balance = currencyTo.Balance + (amount * rate);
             await _repositoryManager.CurrencyRepository.updateCurrency(currencyTo);
             await _repositoryManager.CurrencyRepository.updateCurrency(currencyFrom);
             return true;
@@ -123,17 +123,18 @@ namespace wepay.Service
             var name = user.user.FirstName;
             return name;
         }
-        public async Task<bool> ReceiveMoney (string CurrencyId, int amount, int rate)
+        public async Task<bool> ReceiveMoney(string CurrencyId, int amount, int rate)
         {
             var currency = await _repositoryManager.CurrencyRepository.getCurrencyById(CurrencyId);
             if (currency == null)
             {
-                return false ;
+                return false;
             }
             currency.Balance = currency.Balance + (amount * rate);
             await _repositoryManager.CurrencyRepository.updateCurrency(currency);
             return true;
-           
+
         }
+     
     }
 }

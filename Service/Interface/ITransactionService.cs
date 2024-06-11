@@ -6,6 +6,6 @@ namespace wepay.Service.Interface
 {
     public interface ITransactionService
     {
-
+        Task<Transaction?> GetTransactionById(string id);
     }
 }

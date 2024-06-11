@@ -16,5 +16,10 @@ namespace wepay.Service
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
+        public async Task<Transaction?> GetTransactionById (string id)
+        {
+            var transaction = await _repositoryManager.TransactionRepository.GetTransactionById(id);
+            return transaction;
+        }
     }
 }

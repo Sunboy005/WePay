@@ -10,5 +10,10 @@ namespace wepay.Repository
         {
             _repositoriesContext = repositoriesContext;
         }
+        public async Task<Transaction> GetTransactionById(string id)
+        {
+            var transaction = await _repositoriesContext.Transactions.FindAsync(id);
+            return transaction; 
+        }
     }
 }

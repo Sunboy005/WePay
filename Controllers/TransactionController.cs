@@ -19,5 +19,17 @@ namespace wepay.Controllers
             _serviceManager = serviceManager;
             _httpContextAccessor = httpContextAccessor;
         }
+
+        [HttpGet("GetTransactionByWalletAddress")]
+        public async Task<IActionResult> GetTransactionBywalletAddress([FromQuery] string address)
+        {
+
+            var history = await _serviceManager.TransactionService.GetTransactionsByWalletAddress(address);
+            if (history == null)
+            {
+                return NotFound();
+            }
+            return Ok(history);
+        }
     }
 }

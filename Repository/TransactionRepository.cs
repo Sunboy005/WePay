@@ -10,5 +10,11 @@ namespace wepay.Repository
         {
             _repositoriesContext = repositoriesContext;
         }
+
+        public async Task<List<Transaction>> GetTransactionsByWalletAddress(string Address)
+        {
+            var history =  _repositoriesContext.Transactions.Where(a => a.WalletAddress == Address).ToList();
+            return history;
+        }
     }
 }

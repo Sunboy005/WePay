@@ -6,6 +6,6 @@ namespace wepay.Service.Interface
 {
     public interface ITransactionService
     {
-
+        Task<List<Transaction>> GetTransactionsByWalletAddress(string address);
     }
 }

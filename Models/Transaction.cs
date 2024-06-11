@@ -8,8 +8,7 @@ namespace wepay.Models
     {
         public string TransactionId { get; set; }
         public string TransactionReference { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime DateModified { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string WalletId { get; set; }
         public string CurrencyId { get; set; }
         public int Amount { get; set; }

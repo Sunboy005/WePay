@@ -82,7 +82,7 @@ namespace wepay.Service
             return true;
         }
 
-        public int GetWalletBallance(List<Currency> currencies)
+        public int GetWalletBallance(List<WalletCurrency> currencies)
         {
             var balance = 0;
             var rate = 1500;
@@ -102,13 +102,13 @@ namespace wepay.Service
             return balance;
         }
 
-        public async Task<bool> TransferMoneyWithinWallet(Currency currencyFrom, Currency currencyTo, int amount)
+        public async Task<bool> TransferMoneyWithinWallet(WalletCurrency currencyFrom, WalletCurrency currencyTo, int amount)
         {
             var rate = 1000;
             currencyFrom.Balance = currencyFrom.Balance - amount;
             currencyTo.Balance = currencyTo.Balance + (amount * rate);
-            await _repositoryManager.CurrencyRepository.updateCurrency(currencyTo);
-            await _repositoryManager.CurrencyRepository.updateCurrency(currencyFrom);
+            await _repositoryManager.WalletCurrencyRepository.updateWalletCurrency(currencyTo);
+            await _repositoryManager.WalletCurrencyRepository.updateWalletCurrency(currencyFrom);
             return true;
         }
 

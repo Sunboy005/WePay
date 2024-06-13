@@ -173,8 +173,8 @@ namespace wepay.Controllers
             {
                 return BadRequest();
             }
-            var currencyFrom = await _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyFromShortCode);
-            var currentyTo = await _serviceManager.CurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyToShortCode);
+            var currencyFrom = await _serviceManager.WalletCurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyFromShortCode);
+            var currentyTo = await _serviceManager.WalletCurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyToShortCode);
             if (currencyFrom == null || currentyTo == null)
             {
                 return BadRequest();

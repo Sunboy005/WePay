@@ -34,5 +34,10 @@ namespace wepay.Service
 
         return transaction;
     }
-}
+
+        public Task<Transaction?> GetTransactionById(string id)
+        {
+            throw new NotImplementedException();
+        }
+    }
     }

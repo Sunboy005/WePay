@@ -82,7 +82,7 @@ namespace wepay.Service
             return true;
         }
 
-        public int GetWalletBallance(List<Currency> currencies)
+        public int GetWalletBallance(List<WalletCurrency> currencies)
         {
             var balance = 0;
             var rate = 1500;

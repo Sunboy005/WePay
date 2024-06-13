@@ -9,6 +9,7 @@ namespace wepay.Repository
         private readonly Lazy<IOtpRepository> _otpRepository;   
         private readonly Lazy<ICurrencyRepository> _currencyRepository;
         private readonly Lazy<IWalletCurrencyRepository> _walletcurrencyRepository;
+        private readonly Lazy<ITransactionRepository> _transactionRepository;
         public RepositoryManager(RepositoriesContext repositoriesContext)
         {
             _repositoriesContext = repositoriesContext;
@@ -16,6 +17,7 @@ namespace wepay.Repository
             _otpRepository = new Lazy<IOtpRepository>(() => new OtpRepository(repositoriesContext));
             _currencyRepository = new Lazy<ICurrencyRepository> (() => new CurrencyRepository(repositoriesContext));
             _walletcurrencyRepository = new Lazy<IWalletCurrencyRepository>(() => new WalletCurrencyRepository(repositoriesContext));
+            _transactionRepository = new Lazy<ITransactionRepository>(() => new TransactionRepository(repositoriesContext));
         }
 
         public IWalletRepository WalletRepository { get { return _walletRepository.Value; } }
@@ -25,5 +27,6 @@ namespace wepay.Repository
         public ICurrencyRepository CurrencyRepository { get { return _currencyRepository.Value;  } }
 
         public IWalletCurrencyRepository WalletCurrencyRepository { get { return _walletcurrencyRepository.Value; } }
+        public ITransactionRepository TransactionRepository { get { return _transactionRepository.Value; } }
     }
 }

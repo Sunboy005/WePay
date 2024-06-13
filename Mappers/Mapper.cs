@@ -23,6 +23,7 @@ namespace wepay.Mappers
             CreateMap<CurrencyToAddDto, Currency>();
             CreateMap<WalletCurrencyDeletionDto, WalletCurrency>();
             CreateMap<WalletCurrencyAdditionDto, WalletCurrency>();
+            CreateMap<TransactionDto, Transaction>();
         }
     }
 }

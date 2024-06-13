@@ -10,5 +10,6 @@ namespace wepay.Service.Interface
         Task<WalletCurrency> GetWalletCurrencyById(string Id);      
         Task<bool> DeleteWalletCurrency(WalletCurrencyDeletionDto walletcurrencyDeletionDto);
         Task<int?> GetWalletCurrencyBalance(string Id);
+        Task<WalletCurrency> GetCurrencyByShortCodeForAWallet(string WalletAddress, string ShortCode);
     }
 }

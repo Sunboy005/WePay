@@ -1,4 +1,5 @@
-﻿using wepay.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using wepay.Models;
 using wepay.Repository.Interface;
 
 namespace wepay.Repository
@@ -21,6 +22,12 @@ namespace wepay.Repository
         {
             _repositoriesContext.WalletCurrencies.Remove(walletcurrency);
             await _repositoriesContext.SaveChangesAsync();
+        }
+
+        public async Task<WalletCurrency> GetCurrencyByShortCodeForAWallet(string Address, string shortcode)
+        {
+            var walletcurrency = await _repositoriesContext.WalletCurrencies.Where(a => a.wallet.Address == Address && a.currency.ShortCode == shortcode).FirstOrDefaultAsync();
+            return walletcurrency;
         }
 
         public async Task<WalletCurrency> getWalletCurrencyById(string Id)

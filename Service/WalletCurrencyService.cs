@@ -55,7 +55,11 @@ namespace wepay.Service
             return true;
         }
 
-    
+        public async Task<WalletCurrency> GetCurrencyByShortCodeForAWallet(string WalletAddress, string ShortCode)
+        {
+            return await _repositoryManager.WalletCurrencyRepository.GetCurrencyByShortCodeForAWallet(WalletAddress, ShortCode);
+        }
+
         public async Task<int?> GetWalletCurrencyBalance(string Id)
         {
             var walletcurrency = await _repositoryManager.WalletCurrencyRepository.getWalletCurrencyById(Id);

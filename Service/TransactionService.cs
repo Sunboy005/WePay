@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using wepay.Mappers;
 using wepay.Models;
 using wepay.Models.DTOs;
+using wepay.Repository;
 using wepay.Repository.Interface;
 using wepay.Service.Interface;
 
@@ -21,5 +23,16 @@ namespace wepay.Service
             var transaction = await _repositoryManager.TransactionRepository.GetTransactionById(id);
             return transaction;
         }
+    
+    public async Task <Transaction> AddTransaction(TransactionDto transactionDto)
+    {
+        var transaction = _mapper.Map<Transaction>(transactionDto);
+
+       
+        await _repositoryManager.TransactionRepository.AddTransaction(transaction);
+         
+
+        return transaction;
     }
 }
+    }

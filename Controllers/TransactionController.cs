@@ -19,5 +19,37 @@ namespace wepay.Controllers
             _serviceManager = serviceManager;
             _httpContextAccessor = httpContextAccessor;
         }
+        [HttpGet("id", Name = "GetTransactionById")]
+        [Authorize]
+        public async Task<IActionResult> GetTransactionById([FromQuery] string id)
+        {
+            var transaction = await _serviceManager.TransactionService.GetTransactionById(id);
+
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(transaction);
+        }
+        [HttpPost("AddTransaction")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddTransaction([FromBody] TransactionDto transactionDto)
+        {
+            var wallet = await _serviceManager.WalletService.GetWalletByAddress(transactionDto.WalletId);
+            if (wallet == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _serviceManager.TransactionService.AddTransaction(transactionDto);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+
+
+        }
     }
 }

@@ -12,10 +12,11 @@ namespace wepay.Repository
         {
             _repositoriesContext = repositoriesContext;
         }
-        public async Task<Transaction> GetTransactionById(string id)
+
+        public async Task<List<Transaction>> GetTransactionsByWalletAddress(string Address)
         {
-            var transaction = await _repositoriesContext.Transactions.FindAsync(id);
-            return transaction; 
+            var history =  _repositoriesContext.Transactions.Where(a => a.WalletAddress == Address).ToList();
+            return history;
         }
         public async Task AddTransaction(TransactionDto transactionDto)
         {

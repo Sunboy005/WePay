@@ -7,5 +7,6 @@ namespace wepay.Repository.Interface
     {
         Task<Transaction> GetTransactionById(string id);
         Task AddTransaction(Transaction transaction);
+        Task <List<Transaction>> GetTransactionsByWalletAddress(string Address);
     }
 }

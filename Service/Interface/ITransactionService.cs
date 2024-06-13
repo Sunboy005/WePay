@@ -10,5 +10,6 @@ namespace wepay.Service.Interface
         Task<Transaction> AddTransaction(TransactionDto transactionDto);
 
 
+        Task<List<Transaction>> GetTransactionsByWalletAddress(string address);
     }
 }

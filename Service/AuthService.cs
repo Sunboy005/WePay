@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using wepay.Models.DTOs;
 using wepay.Models;
-using AutoMapper;
-
+using wepay.Repository;
+using wepay.Repository.Interface;
 using wepay.Service.Interface;
 
 namespace wepay.Service;
@@ -17,20 +17,21 @@ public class AuthService : IAuthService
     private readonly IMapper _mapper;
     private readonly IConfiguration _configuration;
     private readonly SignInManager<User> _signInManager;
-    
+    private readonly IRepositoryManager _repositoryManager;
 
     private User _user;
 
-    public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration)
-        {
-        _signInManager = signInManager;        
+    public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration, IRepositoryManager repositoryManager)
+    {
+        _repositoryManager = repositoryManager;
+        _signInManager = signInManager;
         _mapper = mapper;
         _userManager = userManager;
         _configuration = configuration;
     }
 
     public async Task<bool> LoginUser(UserForLoginDto userForLoginDto)
-    {                
+    {
         _user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
         if (_user == null || _user.EmailConfirmed == false)
         {
@@ -38,27 +39,12 @@ public class AuthService : IAuthService
         }
         var result = await _signInManager.PasswordSignInAsync(_user, userForLoginDto.Password, false, false);
 
-        if(result.Succeeded == false)
+        if (result.Succeeded == false)
         {
             return false;
-        }       
+        }
         return true;
     }
-
-    public async Task<IdentityResult> ChangePassword(string email, string newPassword)
-    {
-        var user = await  _userManager.FindByEmailAsync(email);
-        var hasedPassword = _userManager.PasswordHasher.HashPassword(user, newPassword);
-        if (hasedPassword == null)
-        {
-            return IdentityResult.Failed();
-        }
-
-        user.PasswordHash = hasedPassword;
-        var result = await _userManager.UpdateAsync(user);
-        return result;
-    }
-
 
 
     public async Task<string> CreateToken()
@@ -105,23 +91,9 @@ List<Claim> claims)
         return tokenOptions;
     }
 
-    
-    public async Task<IdentityResult> ConfirmUserEmail(UserForEmailConfirmationDto userForEmailConfirmationDto)
-    {
-        var user = await _userManager.FindByEmailAsync(userForEmailConfirmationDto.Email);
-        if (user == null)
-        {
-            throw new Exception("User not Found");
-        }
-
-        user.EmailConfirmed = true;
-        var result =await _userManager.UpdateAsync(user);       
-        return result;
-    }
-
     public async Task LogoutUser()
     {
-        
-        await _signInManager.SignOutAsync(); 
+
+        await _signInManager.SignOutAsync();
     }
 }

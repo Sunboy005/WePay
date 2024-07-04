@@ -1,8 +1,7 @@
 ﻿namespace wepay.Models.DTOs
 {
     public class TransactionDto
-    {
-        public string TransactionId { get; set; }
+    {       
         public string TransactionReference { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string WalletId { get; set; }

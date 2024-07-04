@@ -5,19 +5,18 @@ namespace wepay.Service.Interface
 {
     public interface IWalletService
     {
-        Task<Wallet> CreateWallet(WalletCreationDto walletcreationDto);
-        Task<Wallet?> GetWalletById(string id);
-        Task<Wallet?> GetWalletByAddress(string address);
-        Task<Wallet?> LockWallet(String walletId);
-        Task<Wallet?> EnableWallet(String walletId);
-        Task<Wallet?> GetWalletByUserId(string userId);
-        Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto);
-       // Task<Wallet> GetWalletBallance(String walletId);
+        Task<String> CreateWallet(String pin, User user);
+        Task<UserWallet?> GetWalletById(string id);
+        Task<UserWallet?> GetWalletByAddress(string address);
+        Task LockWallet(UserWallet wallet);
+        Task EnableWallet(UserWallet wallet);
+        Task<UserWallet?> GetWalletByUserId(string userId);
+        Task<bool> ChangeWalletPinAsync(ChangeWalletPinDto changeWalletPinDto);       
         Task<string> GetUserByWalletAddress(string address);
         Task<bool> ReceiveMoney(string CurrencyId, int amount, int rate);
-        Task<bool> TransferMoneyWithinWallet(WalletCurrency currencyFrom, WalletCurrency currencyTo, int amount);
-        int GetWalletBallance(List<WalletCurrency> currencies);
-
+        Task TransferMoneyWithinWallet(UserWallet wallet, TransferWithinWalletDto transferWithinWalletDto);
+        int GetWalletBallance(UserWallet wallet);
+        Task TransferMoney(UserWallet walletFrom, UserWallet walletTo, TransferDto transferDto);
 
     }
 }

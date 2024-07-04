@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Entities.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
 
@@ -18,18 +20,20 @@ namespace wepay.Controllers
 
         [HttpPost("changebasecurrency")]
         [Authorize]
-        public async Task<IActionResult> ChangeBaseCurrency(string currencyIdFrom, string currencyIdTo)
+        public async Task<IActionResult> ChangeBaseWalletCurrency([FromBody] ChangeBaseCurrencyDto changeCurrencyDto)
         {
-            var result = await _serviceManager.WalletCurrencyService.ChangeBaseCurrency(currencyIdFrom, currencyIdTo);
-            if (result == null)
+            var wallet = await _serviceManager.WalletService.GetWalletByAddress(changeCurrencyDto.WalletAddress);
+            if (wallet == null)
             {
-                return NotFound();
+                throw new BadRequestException("Wallet not found");
             }
+
+            await _serviceManager.WalletCurrencyService.ChangeBaseCurrency(wallet, changeCurrencyDto);         
             return Ok();
 
         }
         [HttpGet("getCurrencyById")]
-        public async Task<IActionResult> GetCurrencyById([FromQuery] string Id)
+        public async Task<IActionResult> GetWalletCurrencyById([FromQuery] string Id)
         {
             var walletcurrency = await _serviceManager.WalletCurrencyService.GetWalletCurrencyById(Id);
             if (walletcurrency == null)
@@ -40,74 +44,46 @@ namespace wepay.Controllers
         }
         [HttpPost("Add-Currency")]
         [Authorize]
-        public async Task<IActionResult> AddCurrency([FromBody] WalletCurrencyAdditionDto walletCurrencyAdditionDto)
+        public async Task<IActionResult> AddWalletCurrency([FromBody] WalletCurrencyAdditionDto walletCurrencyAdditionDto)
         {
             var user = await _serviceManager.UserService.GetUserByEmail(walletCurrencyAdditionDto.UserEmail);
             if (user == null)
             {
-                return NotFound();
+                throw new BadRequestException("User not found");
             }
-            var userRole = user.Role;
-            if (userRole == "Noob")
+            
+            if(user.Wallet == null)
             {
-                var wallet = await _serviceManager.WalletService.GetWalletByUserId(user.Id);
-                
-                if (wallet == null)
-                {
-                    return NotFound();
-                }
-                var currencies = wallet.WalletCurrencies;
-                if (currencies.Count == 0)
-                {
-                    await _serviceManager.WalletCurrencyService.AddWalletCurrency(walletCurrencyAdditionDto);
-                }
-                else
-                {
-                    return BadRequest();
-                }
-
+                throw new BadRequestException("Wallet not found");
             }
-            else if (userRole == "Elite")
+
+            if(user.Wallet.Address != walletCurrencyAdditionDto.WalletAddress)
             {
-                var wallet = await _serviceManager.WalletService.GetWalletByUserId(user.Id);
-                if (wallet == null)
-                {
-                    return NotFound();
-                }
-                var currencies = wallet.WalletCurrencies;
-                if (currencies.Count == 0)
-                {
-                    await _serviceManager.WalletCurrencyService.AddWalletCurrency(walletCurrencyAdditionDto);
-                }
-                else if (currencies.Count >= 1)
-                {
-                    await _serviceManager.WalletCurrencyService.AddWalletCurrency(walletCurrencyAdditionDto);
-                }
+                throw new BadRequestException("Wallet does not belong to user");
             }
-            var result = await _serviceManager.WalletCurrencyService.AddWalletCurrency(walletCurrencyAdditionDto);
-            if (result == null)
-            {
-                return BadRequest();
+
+            var userRole = await _serviceManager.UserService.GetRoleOfUser(user);
+
+            if(userRole == "Admin") {
+                throw new BadRequestException("Admin cannot have a wallet currency");
             }
-            return Ok(result);
+            
+            await _serviceManager.WalletCurrencyService.AddWalletCurrency(userRole, user, walletCurrencyAdditionDto.ShortCode, user.Wallet.Id);
 
-
+            return Ok();
         }
+
         [HttpDelete("delete-currency")]
         [Authorize]
-        public async Task<IActionResult> DeleteCurrency([FromBody] WalletCurrencyDeletionDto walletCurrencyDeletionDto)
+        public async Task<IActionResult> DeleteWalletCurrency([FromBody] WalletCurrencyDeletionDto walletCurrencyDeletionDto)
         {
-            var result = await _serviceManager.WalletCurrencyService.DeleteWalletCurrency(walletCurrencyDeletionDto);
-            if (result == false)
-            {
-                return BadRequest();
-            }
+            await _serviceManager.WalletCurrencyService.DeleteWalletCurrency(walletCurrencyDeletionDto.WalletAddress, walletCurrencyDeletionDto.CurrencyCode);          
             return NoContent();
 
         }       
 
         [HttpGet("getCurrencyBalance")]
-        public async Task<IActionResult> GetCurrencyBalance([FromQuery] string currencyId)
+        public async Task<IActionResult> GetWalletCurrencyBalance([FromQuery] string currencyId)
         {
             var currency = await _serviceManager.WalletCurrencyService.GetWalletCurrencyBalance(currencyId);
             if (currency == null)

@@ -5,7 +5,7 @@ namespace wepay.Repository.Interface
 {
     public interface IOtpRepository
     {
-        void CreateOtp(Otp otp);
+        Task CreateOtp(Otp otp);
         Task<Otp?> GetOtpByCode(string code);
         Task<Otp?> GetUnexpiredOtp(OtpRequestDto otpRequestDto);
 

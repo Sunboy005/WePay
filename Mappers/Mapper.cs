@@ -16,14 +16,18 @@ namespace wepay.Mappers
             CreateMap<AdminCreationDto, AdminForRegistrationDto>();
             CreateMap<AdminForRegistrationDto, AdminCreationDto>();
             CreateMap<AdminCreationDto, User>();
-            CreateMap<Wallet, WalletCreationDto>();
-            CreateMap<WalletCreationDto, Wallet>();
-            CreateMap<Wallet, WalletDto>();
+            CreateMap<UserWallet, WalletCreationDto>();
+            CreateMap<WalletCreationDto, UserWallet>();
+            CreateMap<UserWallet, WalletDto>();
             CreateMap<OtpRequestDto, Otp>();
             CreateMap<CurrencyToAddDto, Currency>();
             CreateMap<WalletCurrencyDeletionDto, WalletCurrency>();
             CreateMap<WalletCurrencyAdditionDto, WalletCurrency>();
             CreateMap<TransactionDto, Transaction>();
+            CreateMap<UserWallet, WalletDto>();
+            CreateMap<Currency, CurrencyDto>();
+            CreateMap<WalletCurrency, WalletCurrencyDto>();
+                
         }
     }
 }

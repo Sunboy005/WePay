@@ -17,17 +17,19 @@ namespace wepay.Service
         private readonly Lazy<IOtpService> _otpService;
         private readonly Lazy<IWalletCurrencyService> _walletcurrencyService;
         private readonly Lazy<ITransactionService> _transactionService;
+        private readonly IMapper _mapper;
 
 
         public ServiceManager(IRepositoryManager repositoryManager, SignInManager<User> signInManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration) {
                 
             _userService = new Lazy<IUserService>(() => new UserService(userManager, mapper));
-            _authService = new Lazy<IAuthService>(() => new AuthService(signInManager, userManager, mapper, configuration));
+            _authService = new Lazy<IAuthService>(() => new AuthService(signInManager, userManager, mapper, configuration, repositoryManager));
             _walletService = new Lazy<IWalletService>(() => new WalletService(repositoryManager, mapper));
             _currencyService = new Lazy<ICurrencyService>(() => new CurrencyService(repositoryManager, mapper));
             _otpService = new Lazy<IOtpService>(() => new OtpService(repositoryManager, mapper));
             _walletcurrencyService = new Lazy<IWalletCurrencyService>(() => new WalletCurrencyService(repositoryManager, mapper));
             _transactionService = new Lazy<ITransactionService>(() => new TransactionService(repositoryManager, mapper));
+            _mapper = mapper;
         }
 
         public IUserService UserService { get {  return _userService.Value; } }
@@ -42,5 +44,7 @@ namespace wepay.Service
 
         public IWalletCurrencyService WalletCurrencyService { get { return _walletcurrencyService.Value; } }
         public ITransactionService TransactionService { get { return _transactionService.Value; } }
+
+        public IMapper Mapper { get { return _mapper; } }
     }
 }

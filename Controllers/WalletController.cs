@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Entities.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using MimeKit.Encodings;
+using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
 
@@ -19,16 +21,23 @@ namespace wepay.Controllers
 
         [HttpPost("create")]
         [Authorize]
-        public async Task<IActionResult> CreateWallet([FromBody] WalletCreationDto walletcreationDto)
+        public async Task<IActionResult> CreateWallet([FromBody] WalletCreationDto walletCreationDto)
         {
-            var user = await _serviceManager.UserService.GetUserById(walletcreationDto.UserId);
+            var user = await _serviceManager.UserService.GetUserById(walletCreationDto.UserId);
             if (user == null)
             {
-                return NotFound(ModelState);
+                throw new BadRequestException("User not found");
+            }            
+            
+            if(user.Wallet != null)
+            {
+                throw new BadRequestException("User already has a wallet");
             }
-            var result = await _serviceManager.WalletService.CreateWallet(walletcreationDto);
+            
 
-            return Created("WalletAddress", result.Address);
+            var address = await _serviceManager.WalletService.CreateWallet(walletCreationDto.Pin, user);                    
+            
+            return Created("WalletAddress", address);
         }
 
         [HttpGet("id", Name = "GetWalletById")]
@@ -42,7 +51,9 @@ namespace wepay.Controllers
                 return NotFound();
             }
 
-            return Ok(wallet);
+            var walletDto = _serviceManager.Mapper.Map<WalletDto>(wallet);
+
+            return Ok(walletDto);
         }
 
         [HttpGet("address", Name = "GetWalletByAddress")]
@@ -56,110 +67,79 @@ namespace wepay.Controllers
                 return NotFound();
             }
 
-            return Ok(wallet);
+            var walletDto = _serviceManager.Mapper.Map<WalletDto>(wallet);
+
+            return Ok(walletDto);
         }
 
-        [HttpPost("lock/{walletId}")]
+        [HttpPost("lock/{address}")]
         [Authorize]
-        public async Task<IActionResult> LockWallet(string walletId)
+        public async Task<IActionResult> LockWallet(string address)
         {
-            var result = await _serviceManager.WalletService.LockWallet(walletId);
-            if (result == null)
+
+            var wallet = await _serviceManager.WalletService.GetWalletByAddress(address);
+
+            if (wallet == null)
             {
                 return NotFound();
             }
-            return Ok();
 
+            await _serviceManager.WalletService.LockWallet(wallet);
+
+            return Ok();
         }
 
-        [HttpPost("enable/{walletId}")]
+        [HttpPost("enable/{address}")]
         [Authorize]
-        public async Task<IActionResult> EnableWallet(string walletId)
+        public async Task<IActionResult> EnableWallet(string address)
         {
-            var result = await _serviceManager.WalletService.EnableWallet(walletId);
-            if (result == null)
+            var wallet = await _serviceManager.WalletService.GetWalletByAddress(address);
+
+            if (wallet == null)
             {
                 return NotFound();
             }
+
+            await _serviceManager.WalletService.EnableWallet(wallet);
+
             return Ok();
 
-        }
-
-        //[HttpPost("requesst-change-wallet-pin")]
-        //public async Task<IActionResult> RequestChangeWalletPin([FromBody][FromBody] string email,)
-        //{
-        //    var user = await _serviceManager.UserService.GetUserByEmail(email);
-        //    if (user == null)
-        //    {
-        //        return NotFound("No user found with email: " + email);
-        //    }
-
-        //    var otpRequestDto = new OtpRequestDto
-        //    {
-        //        Email = email,
-        //        Reason = nameof(OtpReasons.PasswordChange)
-        //    };
-        //    var otpCode = await _serviceManager.OtpService.CreateNewOtp(otpRequestDto);
-        //    if (string.IsNullOrEmpty(otpCode))
-        //    {
-
-        //        return BadRequest("We couldn't generate otp");
-        //    }
-
-        //    return Ok("We have sent an password change code to " + email + "with OTP code " + otpCode);
-        //}
-
-
-        [HttpPost("change-wallet-pin")]
-        public async Task<IActionResult> ChangeWalletPin([FromBody] ChangeWalletPinDto changeWalletPinDto)
-        {
-            var result = await _serviceManager.WalletService.ChangeWalletPinAsync(changeWalletPinDto);
-            if (!result)
-            {
-                return BadRequest("Failed to change PIN, the current PIN might be incorrect or the wallet does not exist.");
-            }
-            return Ok("PIN changed successfully");
-        }
+        }       
 
 
 
         [HttpGet("userId", Name = "GetWalletByUserId")]
         [Authorize]
-        public async Task<IActionResult> GetWalletByUserId(string userId)
+        public async Task<IActionResult> GetWalletByUserId([FromQuery] string userId)
         {
             var user = await _serviceManager.UserService.GetUserById(userId);
 
             if (user == null)
             {
-                return NotFound("User with " + userId + "does not exist");
+                throw new BadRequestException("User does not exist");
             }
 
-            var wallet = await _serviceManager.WalletService.GetWalletByUserId(userId);
-            if (wallet == null)
+            if(user.Wallet == null)
             {
-                return NotFound("User with " + userId + "does not have a wallet");
+                return NotFound();
             }
 
+            var wallet = _serviceManager.Mapper.Map<WalletDto>(user.Wallet);
             return Ok(wallet);
 
         }
 
-        [HttpGet("balance/{walletId}")]
+        [HttpGet("balance/{walletAddress}")]
         [Authorize]
-        public async Task<IActionResult> GetWalletBalance(string walletId)
+        public async Task<IActionResult> GetWalletBalance(string walletAddress)
         {
-            var wallet = await _serviceManager.WalletService.GetWalletById(walletId);
+            var wallet = await _serviceManager.WalletService.GetWalletByAddress(walletAddress);
             if (wallet == null)
             {
-                return NotFound("No wallet found");
-            }
-            var currencies = wallet.WalletCurrencies;
-            if (currencies.IsNullOrEmpty())
-            {
-                return NotFound("No currencies found");
+                throw new BadRequestException("Wallet does not exist");
             }
 
-            var balance = _serviceManager.WalletService.GetWalletBallance(currencies);
+            var balance = _serviceManager.WalletService.GetWalletBallance(wallet);
 
             return Ok(balance);
         }
@@ -171,42 +151,38 @@ namespace wepay.Controllers
             var wallet = await _serviceManager.WalletService.GetWalletByAddress(transferWithinWalletDto.WalletAddress);
             if (wallet == null)
             {
-                return BadRequest();
-            }
-            var currencyFrom = await _serviceManager.WalletCurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyFromShortCode);
-            var currentyTo = await _serviceManager.WalletCurrencyService.GetCurrencyByShortCodeForAWallet(wallet.Address, transferWithinWalletDto.CurrencyToShortCode);
-            if (currencyFrom == null || currentyTo == null)
-            {
-                return BadRequest();
+                throw new BadRequestException("Wallet does not exist");
             }
 
-            if (currencyFrom.Balance < transferWithinWalletDto.Amount)
+            await _serviceManager.WalletService.TransferMoneyWithinWallet(wallet, transferWithinWalletDto);
+            return Ok();
+        }
+
+        [HttpPost("transfer")]
+        [Authorize]
+        public async Task<IActionResult> TransferMoney([FromBody] TransferDto transferDto)
+        {
+            var walletFrom = await _serviceManager.WalletService.GetWalletByAddress(transferDto.WalletAddressFrom);
+            var walletTo = await _serviceManager.WalletService.GetWalletByAddress(transferDto.WalletAddressTo);
+
+            if (walletFrom == null || walletTo == null)
             {
-                return BadRequest();
-            }
-            var result = await _serviceManager.WalletService.TransferMoneyWithinWallet(currencyFrom, currentyTo, transferWithinWalletDto.Amount);
-            if (result == true)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
+                throw new BadRequestException("Wallet does not exist");
             }
 
+            await _serviceManager.WalletService.TransferMoney(walletFrom, walletTo, transferDto);
+            return Ok();
         }
 
         [HttpGet("Name/Address")]
         public async Task<IActionResult> GetUserByWalletAddress([FromQuery] string address)
         {
-            var user = await _serviceManager.WalletService.GetUserByWalletAddress(address); 
-            if(user == null)
+            var user = await _serviceManager.WalletService.GetUserByWalletAddress(address);
+            if (user == null)
             {
                 return NotFound();
             }
             return Ok(user);
-        } 
-
-
+        }
     }
 }

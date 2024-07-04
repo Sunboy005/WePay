@@ -11,11 +11,14 @@ namespace wepay.Repository
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<User>()
+                .HasOne(x => x.Wallet)
+                .WithOne(x => x.User);
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new RoleConfiguration());
         }
 
-        public DbSet<Wallet>? Wallets { get; set; } 
+        public DbSet<UserWallet>? Wallets { get; set; } 
 
         public DbSet<Currency>? Currencies { get; set;}
 

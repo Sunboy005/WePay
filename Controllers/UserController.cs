@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
 
@@ -15,25 +14,31 @@ namespace wepay.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
-        public UserController(IServiceManager serviceManager, IHttpContextAccessor httpContextAccessor)
+        public UserController(IServiceManager serviceManager, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _serviceManager = serviceManager;
-            _httpContextAccessor = httpContextAccessor; 
+            _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
 
 
-        [HttpGet("id", Name = "GetUserById" )]
+        [HttpGet("id", Name = "GetUserById")]
         [Authorize]
-        public async Task<IActionResult> GetUserById( [FromQuery] string id)
+        public async Task<IActionResult> GetUserById([FromQuery] string id)
         {
-            var identityUser = await _serviceManager.UserService.GetUserById(id);
-            
-            if (identityUser == null)
+            var user = await _serviceManager.UserService.GetUserById(id);
+
+            if (user == null)
             {
                 return NotFound();
             }
 
+            var role = await _serviceManager.UserService.GetRoleOfUser(user);
+
+            var identityUser = _mapper.Map<IdentityUserDto>(user);
+            identityUser.Role = role;
             return Ok(identityUser);
         }
 
@@ -47,7 +52,11 @@ namespace wepay.Controllers
             {
                 return NotFound();
             }
-            return Ok(user);
+            var role = await _serviceManager.UserService.GetRoleOfUser(user);
+
+            var identityUser = _mapper.Map<IdentityUserDto>(user);
+            identityUser.Role = role;
+            return Ok(identityUser);
         }
 
         [HttpPost("create-user")]
@@ -71,14 +80,9 @@ namespace wepay.Controllers
 
         [HttpDelete("delete-user")]
         [Authorize]
-        public async Task<IActionResult> DeleteUser([FromBody]UserDeletionDto userDeletionDto)
+        public async Task<IActionResult> DeleteUser([FromBody] UserDeletionDto userDeletionDto)
         {
-            var result = await _serviceManager.UserService.DeleteUser(userDeletionDto);
-            if (result == false)
-            {
-                return BadRequest();
-            }
-
+            await _serviceManager.UserService.DeleteUser(userDeletionDto);
             return NoContent();
         }
 
@@ -86,12 +90,7 @@ namespace wepay.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto userUpdateDto)
         {
-            var result = await _serviceManager.UserService.UpdateUserAsync(id, userUpdateDto);
-
-            if (!result)
-            {
-                return NotFound("User not found or update failed.");
-            }
+            await _serviceManager.UserService.UpdateUserAsync(id, userUpdateDto);
 
             return NoContent();
         }
@@ -113,7 +112,7 @@ namespace wepay.Controllers
 
             return StatusCode(201);
 
-        }       
+        }
     }
 }
-    
+

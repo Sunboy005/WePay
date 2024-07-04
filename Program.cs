@@ -32,9 +32,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.ConfigureExceptionHandler();
+
 app.UseStaticFiles();
 
- app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

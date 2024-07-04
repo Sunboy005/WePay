@@ -35,9 +35,10 @@ namespace wepay.Service
         return transaction;
     }
 
-        public Task<Transaction?> GetTransactionById(string id)
+        public async Task<Transaction?> GetTransactionById(string id)
         {
-            throw new NotImplementedException();
+            var transaction = await _repositoryManager.TransactionRepository.GetTransactionById(id);
+            return transaction;
         }
     }
     }

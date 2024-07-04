@@ -8,6 +8,6 @@ namespace wepay.Repository.Interface
         Task<WalletCurrency> getWalletCurrencyById(string id);
         Task<WalletCurrency> AddWalletCurrency(WalletCurrency walletcurrency);
         Task deleteWalletCurrency(WalletCurrency walletcurrency);
-        Task<WalletCurrency> GetCurrencyByShortCodeForAWallet(string WalletAddress, string shortcode);
+        Task<WalletCurrency?> GetWalletCurrencyByShortCode(string WalletAddress, string shortcode);
     }
 }

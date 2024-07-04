@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 
 namespace wepay.Service.Interface
 {
@@ -16,5 +17,7 @@ namespace wepay.Service.Interface
 
         IOtpService OtpService { get; }
         ITransactionService TransactionService { get; }
+
+        IMapper Mapper { get; }
     }
 }

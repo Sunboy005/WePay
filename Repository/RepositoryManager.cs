@@ -1,4 +1,6 @@
-﻿using wepay.Repository.Interface;
+﻿using Microsoft.AspNetCore.Identity;
+using wepay.Models;
+using wepay.Repository.Interface;
 
 namespace wepay.Repository
 {
@@ -10,7 +12,9 @@ namespace wepay.Repository
         private readonly Lazy<ICurrencyRepository> _currencyRepository;
         private readonly Lazy<IWalletCurrencyRepository> _walletcurrencyRepository;
         private readonly Lazy<ITransactionRepository> _transactionRepository;
-        public RepositoryManager(RepositoriesContext repositoriesContext)
+        private readonly UserManager<User> _userManager;
+        
+        public RepositoryManager(RepositoriesContext repositoriesContext, UserManager<User> userManager)
         {
             _repositoriesContext = repositoriesContext;
             _walletRepository = new Lazy<IWalletRepository> (() => new WalletRepository(repositoriesContext));
@@ -18,6 +22,7 @@ namespace wepay.Repository
             _currencyRepository = new Lazy<ICurrencyRepository> (() => new CurrencyRepository(repositoriesContext));
             _walletcurrencyRepository = new Lazy<IWalletCurrencyRepository>(() => new WalletCurrencyRepository(repositoriesContext));
             _transactionRepository = new Lazy<ITransactionRepository>(() => new TransactionRepository(repositoriesContext));
+            _userManager = userManager;
         }
 
         public IWalletRepository WalletRepository { get { return _walletRepository.Value; } }
@@ -28,5 +33,9 @@ namespace wepay.Repository
 
         public IWalletCurrencyRepository WalletCurrencyRepository { get { return _walletcurrencyRepository.Value; } }
         public ITransactionRepository TransactionRepository { get { return _transactionRepository.Value; } }
+
+        public UserManager<User> UserManager => _userManager;
+
+        
     }
 }

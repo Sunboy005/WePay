@@ -43,5 +43,9 @@ namespace wepay.Service
             return true;
         }
 
+        public async Task<Currency?> getCurrencyByShortCode(string shortCode)
+        {
+            return await _repositoryManager.CurrencyRepository.getCurrencyByShortCode(shortCode);
+        }
     }
 }

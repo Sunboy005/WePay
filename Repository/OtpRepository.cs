@@ -14,22 +14,22 @@ namespace wepay.Repository
             _repositoriesContext = repositoriesContext;
         }
 
-        public void  CreateOtp(Otp otp)
+        public async Task CreateOtp(Otp otp)
         {
-            _repositoriesContext.Otps.Add(otp);
-            _repositoriesContext.SaveChanges();
+            await _repositoriesContext.Otps.AddAsync(otp);
+            await _repositoriesContext.SaveChangesAsync();
 
         }
 
         public async Task<Otp?> GetOtpByCode(string code)
         {
             var otp = await _repositoriesContext.Otps.Where(otp => otp.Code == code).FirstOrDefaultAsync();
-            return otp;               
+            return otp;
         }
 
         public async Task<Otp?> GetUnexpiredOtp(OtpRequestDto otpRequestDto)
         {
-            var otp = await  _repositoriesContext.Otps.Where(otp => otp.Email == otpRequestDto.Email && otp.Reason == otpRequestDto.Reason && otp.DateExpired > DateTime.Now).FirstOrDefaultAsync();
+            var otp = await _repositoriesContext.Otps.Where(otp => otp.User.Id == otpRequestDto.UserId && otp.Reason == otpRequestDto.Reason && otp.DateExpired > DateTime.Now).FirstOrDefaultAsync();
             return otp;
 
         }

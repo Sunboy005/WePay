@@ -5,11 +5,11 @@ namespace wepay.Service.Interface
 {
     public interface IWalletCurrencyService
     {
-        Task<WalletCurrency?> ChangeBaseCurrency(string currencyIdFrom, string currencyIdTo);
-        Task<WalletCurrency> AddWalletCurrency(WalletCurrencyAdditionDto walletcurrencyAdditionDto);
-        Task<WalletCurrency> GetWalletCurrencyById(string Id);      
-        Task<bool> DeleteWalletCurrency(WalletCurrencyDeletionDto walletcurrencyDeletionDto);
+        Task ChangeBaseCurrency(UserWallet wallet, ChangeBaseCurrencyDto changeBaseCurrencyDto);
+        Task AddWalletCurrency(string userRole, User user, string shortCode, string walletId);
+        Task<WalletCurrency> GetWalletCurrencyById(string Id);
+        Task DeleteWalletCurrency(string walletAddress, string shortCode);
         Task<int?> GetWalletCurrencyBalance(string Id);
-        Task<WalletCurrency> GetCurrencyByShortCodeForAWallet(string WalletAddress, string ShortCode);
+        Task<WalletCurrency?> GetWalletCurrencyByShortCode(string WalletAddress, string ShortCode);
     }
 }

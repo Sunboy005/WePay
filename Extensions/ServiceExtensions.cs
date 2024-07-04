@@ -1,23 +1,53 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Entities.ErrorModel;
+using Entities.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Net;
 using wepay.Models;
 using wepay.Repository;
 using wepay.Repository.Interface;
-using wepay.Service.Interface;
 using wepay.Service;
-using Microsoft.EntityFrameworkCore;
-
-using wepay.Utils;
+using wepay.Service.Interface;
 
 namespace wepay.Extensions
 {
     public static class ServiceExtensions
     {
 
-        
+        public static void ConfigureExceptionHandler(this WebApplication app)
+        {
+            app.UseExceptionHandler(appError =>
+            {
+                appError.Run(async context =>
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.ContentType = "application/json";
+
+                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    if (contextFeature != null)
+                    {
+                        context.Response.StatusCode = contextFeature.Error switch
+                        {
+                            NotFoundException => StatusCodes.Status404NotFound,
+                            InternalServerErrorException => StatusCodes.Status500InternalServerError,
+                            BadRequestException => StatusCodes.Status400BadRequest,                           
+                            _ => StatusCodes.Status500InternalServerError
+
+                        };                        
+
+                        await context.Response.WriteAsync(new ErrorDetails()
+                        {
+                            StatusCode = context.Response.StatusCode,
+                            Message = contextFeature.Error.Message
+                        }.ToString());
+                    }
+                });
+            });
+        }
+
+
 
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -32,15 +62,15 @@ namespace wepay.Extensions
         {
             var builder = services.AddIdentity<User, IdentityRole>(options =>
             {
-                
-                options.SignIn.RequireConfirmedEmail = true;   
-                options.User.RequireUniqueEmail = true;               
+
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true; 
-            }).AddEntityFrameworkStores<RepositoriesContext>()           
-            .AddDefaultTokenProviders; 
+                options.Password.RequireNonAlphanumeric = true;
+            }).AddEntityFrameworkStores<RepositoriesContext>()
+            .AddDefaultTokenProviders;
         }
 
         public static void ConfigureApplicationsCookie(this IServiceCollection services)
@@ -49,11 +79,8 @@ namespace wepay.Extensions
             {
                 options.SlidingExpiration = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-
             }
-            );                         
+            );
         }
-
-     
     }
 }

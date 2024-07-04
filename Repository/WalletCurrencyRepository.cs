@@ -24,15 +24,19 @@ namespace wepay.Repository
             await _repositoriesContext.SaveChangesAsync();
         }
 
-        public async Task<WalletCurrency> GetCurrencyByShortCodeForAWallet(string Address, string shortcode)
+        public async Task<WalletCurrency?> GetWalletCurrencyByShortCode(string Address, string shortcode)
         {
-            var walletcurrency = await _repositoriesContext.WalletCurrencies.Where(a => a.wallet.Address == Address && a.currency.ShortCode == shortcode).FirstOrDefaultAsync();
+            var walletcurrency = await _repositoriesContext.WalletCurrencies.
+                Include(walletcurrency => walletcurrency.Currency).
+                Where(a => a.Wallet.Address == Address && a.Currency.ShortCode == shortcode).FirstOrDefaultAsync();
             return walletcurrency;
         }
 
         public async Task<WalletCurrency> getWalletCurrencyById(string Id)
         {
-            var walletcurrency = await _repositoriesContext.WalletCurrencies.FindAsync(Id);
+            var walletcurrency = await _repositoriesContext.WalletCurrencies.
+                Include(walletcurrency => walletcurrency.Currency).
+                Where(walletcurrency => walletcurrency.Id == Id).FirstAsync();
             return walletcurrency;
         }
 

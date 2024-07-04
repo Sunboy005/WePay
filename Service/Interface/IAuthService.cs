@@ -7,11 +7,9 @@ namespace wepay.Service.Interface
 {
     public interface IAuthService
     {
-        Task<bool> LoginUser(UserForLoginDto userForLoginDto);
-        Task<IdentityResult> ChangePassword(string email, string newPassword);
-       
-        Task<IdentityResult> ConfirmUserEmail(UserForEmailConfirmationDto userForEmailConfirmationDto);
-        Task<string> CreateToken();
+        Task<bool> LoginUser(UserForLoginDto userForLoginDto);     
+              
+        Task<string> CreateToken();      
 
         Task LogoutUser();
     }

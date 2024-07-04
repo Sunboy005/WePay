@@ -12,8 +12,8 @@ using wepay.Repository;
 namespace wepay.Migrations
 {
     [DbContext(typeof(RepositoriesContext))]
-    [Migration("20240529083528_AddedWalletTable")]
-    partial class AddedWalletTable
+    [Migration("20240622141534_changes")]
+    partial class changes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,22 +53,22 @@ namespace wepay.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2b6f5bab-91c6-433f-8c27-67785c6f8e3a",
-                            ConcurrencyStamp = "30528196-a78d-44a4-a7c9-6497ec7ca545",
+                            Id = "7f4bbd44-41b0-4696-8ebf-a6fbca23b7fe",
+                            ConcurrencyStamp = "f439034f-6a6a-441d-8cbf-dd27722a33e8",
                             Name = "Noob",
                             NormalizedName = "NOOB"
                         },
                         new
                         {
-                            Id = "d3476bf6-f42b-44e9-95f6-e4d1e342a90e",
-                            ConcurrencyStamp = "b681d77b-49f3-4cd6-a9ae-ad3282bf6681",
+                            Id = "d87955f7-db45-4ad8-a342-5209a216ce67",
+                            ConcurrencyStamp = "3536d12b-7de0-431b-b804-59365fcc6e1d",
                             Name = "Elite",
                             NormalizedName = "ELITE"
                         },
                         new
                         {
-                            Id = "54475e3a-0d10-4f68-ab2d-efba5bfe0222",
-                            ConcurrencyStamp = "534b5864-4805-4369-a2d5-0f3f99a72a7d",
+                            Id = "00cd3b7f-9185-41bb-8953-5c301160f997",
+                            ConcurrencyStamp = "27ae3b70-224a-4fdd-8b7b-892b1872014a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -180,6 +180,98 @@ namespace wepay.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("wepay.Models.Currency", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Currencies");
+                });
+
+            modelBuilder.Entity("wepay.Models.Otp", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateExpired")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsExpired")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Otps");
+                });
+
+            modelBuilder.Entity("wepay.Models.Transaction", b =>
+                {
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<double>("ConversionRate")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CurrencyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionReference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WalletCurrencyId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("WalletCurrencyId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("wepay.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -202,6 +294,9 @@ namespace wepay.Migrations
                     b.Property<DateTime>("DateModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -210,6 +305,10 @@ namespace wepay.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -246,6 +345,10 @@ namespace wepay.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -269,9 +372,9 @@ namespace wepay.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("wepay.Models.Wallet", b =>
+            modelBuilder.Entity("wepay.Models.UserWallet", b =>
                 {
-                    b.Property<string>("WalletId")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
@@ -293,14 +396,48 @@ namespace wepay.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("Id");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("WalletId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Wallets");
+                });
+
+            modelBuilder.Entity("wepay.Models.WalletCurrency", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Balance")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CurrencyId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsBase")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("WalletId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("WalletCurrencies");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -354,15 +491,71 @@ namespace wepay.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("wepay.Models.Wallet", b =>
+            modelBuilder.Entity("wepay.Models.Otp", b =>
                 {
-                    b.HasOne("wepay.Models.User", "user")
+                    b.HasOne("wepay.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("user");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("wepay.Models.Transaction", b =>
+                {
+                    b.HasOne("wepay.Models.WalletCurrency", "WalletCurrency")
+                        .WithMany()
+                        .HasForeignKey("WalletCurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WalletCurrency");
+                });
+
+            modelBuilder.Entity("wepay.Models.UserWallet", b =>
+                {
+                    b.HasOne("wepay.Models.User", "User")
+                        .WithOne("Wallet")
+                        .HasForeignKey("wepay.Models.UserWallet", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("wepay.Models.WalletCurrency", b =>
+                {
+                    b.HasOne("wepay.Models.Currency", "Currency")
+                        .WithMany("WalletCurrencies")
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("wepay.Models.UserWallet", "Wallet")
+                        .WithMany("WalletCurrencies")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("wepay.Models.Currency", b =>
+                {
+                    b.Navigation("WalletCurrencies");
+                });
+
+            modelBuilder.Entity("wepay.Models.User", b =>
+                {
+                    b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("wepay.Models.UserWallet", b =>
+                {
+                    b.Navigation("WalletCurrencies");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,13 +15,14 @@ namespace wepay.Repository
 
         public async Task<List<Transaction>> GetTransactionsByWalletAddress(string Address)
         {
-            var history =  _repositoriesContext.Transactions.Where(a => a.WalletAddress == Address).ToList();
+            var history =  _repositoriesContext.Transactions.Where(a => a.WalletCurrency.Wallet.Address == Address).ToList();
             return history;
         }
         public async Task AddTransaction(Transaction transaction)
         {
-            var newTransaction = await _repositoriesContext.Transactions.AddAsync(transaction);
-            await _repositoriesContext.SaveChangesAsync();           
+            await _repositoriesContext.Transactions.AddAsync(transaction);
+            await _repositoriesContext.SaveChangesAsync();
+           
         }
 
         public Task<Transaction> GetTransactionById(string id)

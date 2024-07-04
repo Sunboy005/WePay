@@ -4,14 +4,17 @@ namespace wepay.Repository.Interface
 {
     public interface IWalletRepository
     {
-       void updateWallet(Wallet wallet);
+       Task updateWallet(UserWallet wallet);
 
-       Task<Wallet> getWalletById(string id);
-       Task<Wallet> getWalletByAddress(string address);
+       Task<UserWallet> getWalletById(string id);
+       Task<UserWallet> getWalletByAddress(string address);
 
-       Task<Wallet>CreateWallet(Wallet wallet);
-        Task<Wallet>GetWalletByUserId(string userId);
-       
+       Task<UserWallet>CreateWallet(UserWallet wallet);
+        Task<UserWallet>GetWalletByUserId(string userId);
+
+        Task<User> getUserByWalletAddress(string address);
+
+
 
     }
 }

@@ -5,7 +5,6 @@ namespace wepay.Models
     public class User : IdentityUser
     {
         public string FirstName { get; set; }
-
         public string LastName { get; set; }
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -18,6 +17,8 @@ namespace wepay.Models
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public DateTime DateModified { get; set; } = DateTime.Now;
+        public DateTime DateModified { get; set; } = DateTime.Now;        
+
+        public UserWallet? Wallet { get; set; }
     }
 }

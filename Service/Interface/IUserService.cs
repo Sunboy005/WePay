@@ -9,10 +9,10 @@ namespace wepay.Service.Interface
     {
         Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto);
         Task<IdentityResult> RegisterAdmin(AdminForRegistrationDto adminForRegistrationDto);
-        Task<IdentityUserDto?> GetUserById(string id);
-        Task<IdentityUserDto?> GetUserByEmail(string email);
-        Task<bool> DeleteUser(UserDeletionDto userDeletionDto);
-        Task<bool> UpdateUserAsync(string userId, UserUpdateDto userUpdateDto);
+        Task<User?> GetUserById(string id);
+        Task<User?> GetUserByEmail(string email);
+        Task DeleteUser(UserDeletionDto userDeletionDto);
+        Task UpdateUserAsync(string userId, UserUpdateDto userUpdateDto);
         Task<string> GetRoleOfUser(User user);
     }
 }

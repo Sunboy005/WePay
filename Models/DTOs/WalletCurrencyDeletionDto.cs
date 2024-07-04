@@ -2,6 +2,7 @@
 {
     public class WalletCurrencyDeletionDto
     {
-        public string WalletCurrencyId { get; set; }
+        public string WalletAddress{ get; set; }
+        public string CurrencyCode { get; set; }    
     }
 }

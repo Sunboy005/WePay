@@ -1,4 +1,5 @@
-﻿using wepay.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using wepay.Models;
 
 namespace wepay.Repository.Interface
 {
@@ -9,6 +10,8 @@ namespace wepay.Repository.Interface
 
         IOtpRepository OtpRepository { get; }
         IWalletCurrencyRepository WalletCurrencyRepository { get; }
-        ITransactionRepository TransactionRepository { get; }   
+        ITransactionRepository TransactionRepository { get; }  
+        
+        UserManager<User> UserManager { get; }
     }
 }

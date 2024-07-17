@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Exceptions;
+using RestSharp;
 using wepay.Models;
 using wepay.Models.DTOs;
 using wepay.Repository.Interface;
@@ -99,7 +100,6 @@ namespace wepay.Service
 
         public async Task TransferMoney(UserWallet walletFrom, UserWallet walletTo, TransferDto transferDto)
         {
-
             var walletCurrencyFrom = await _repositoryManager.WalletCurrencyRepository.GetWalletCurrencyByShortCode(walletFrom.Address, transferDto.CurrencyFromShortCode);
             var walletCurrencyTo = await _repositoryManager.WalletCurrencyRepository.GetWalletCurrencyByShortCode(walletTo.Address, transferDto.CurrencyToShortCode);
             if (walletCurrencyFrom == null || walletCurrencyTo == null)
@@ -117,11 +117,11 @@ namespace wepay.Service
                 throw new BadRequestException("Balance is low");
             }
 
-            
+            var (newAmount, conversionRate) = await CurrencyConverter.GetRate(transferDto.CurrencyFromShortCode, transferDto.CurrencyToShortCode, transferDto.Amount);
+           
+            walletCurrencyFrom.Balance = walletCurrencyFrom.Balance - (int) transferDto.Amount;
 
-            var rate = 1000;
-            walletCurrencyFrom.Balance = walletCurrencyFrom.Balance - transferDto.Amount;
-            walletCurrencyTo.Balance = walletCurrencyTo.Balance + (transferDto.Amount * rate);
+            walletCurrencyTo.Balance = walletCurrencyTo.Balance + (int) newAmount;
             await _repositoryManager.WalletCurrencyRepository.updateWalletCurrency(walletCurrencyTo);
             await _repositoryManager.WalletCurrencyRepository.updateWalletCurrency(walletCurrencyFrom);
             var transactionReference = TransactionReferenceGenerator.GenerateTransactionReference(10);
@@ -129,19 +129,19 @@ namespace wepay.Service
             {
                 WalletCurrencyId = walletCurrencyFrom.Id,
                 CurrencyName = walletCurrencyFrom.Currency.Name,
-                Amount = transferDto.Amount,
-                ConversionRate = rate,
+                Amount =(int) transferDto.Amount,
+                ConversionRate = conversionRate,
                 TransactionType = nameof(TransactionTypes.Debit),
-                TransactionReference = nameof(transactionReference)
+                TransactionReference = transactionReference
             };
             Transaction toTransaction = new Transaction
             {
                 WalletCurrencyId = walletCurrencyTo.Id,
                 CurrencyName = walletCurrencyTo.Currency.Name,
-                Amount = transferDto.Amount * rate,
-                ConversionRate = rate,
+                Amount = (int) newAmount,
+                ConversionRate = (int) conversionRate,
                 TransactionType = nameof(TransactionTypes.Credit),
-                TransactionReference = nameof(transactionReference)
+                TransactionReference = transactionReference
             };
             await _repositoryManager.TransactionRepository.AddTransaction(fromTransaction);
             await _repositoryManager.TransactionRepository.AddTransaction(toTransaction);
@@ -165,9 +165,11 @@ namespace wepay.Service
             {
                 throw new BadRequestException("Balance is low");
             }
-            var rate = 1000;
-            walletCurrencyFrom.Balance = walletCurrencyFrom.Balance - transferWithinWalletDto.Amount;
-            walletCurrencyTo.Balance = walletCurrencyTo.Balance + (transferWithinWalletDto.Amount * rate);
+            var (newAmount, conversionRate) = await CurrencyConverter.GetRate(transferWithinWalletDto.CurrencyFromShortCode, transferWithinWalletDto.CurrencyToShortCode, transferWithinWalletDto.Amount);
+
+            walletCurrencyFrom.Balance = walletCurrencyFrom.Balance - (int)transferWithinWalletDto.Amount;
+
+            walletCurrencyTo.Balance = walletCurrencyTo.Balance + (int)newAmount;
             await _repositoryManager.WalletCurrencyRepository.updateWalletCurrency(walletCurrencyTo);
             await _repositoryManager.WalletCurrencyRepository.updateWalletCurrency(walletCurrencyFrom);
             var transactionReference = TransactionReferenceGenerator.GenerateTransactionReference(10);
@@ -175,19 +177,19 @@ namespace wepay.Service
             {
                 WalletCurrencyId = walletCurrencyFrom.Id,
                 CurrencyName = walletCurrencyFrom.Currency.Name,
-                Amount = transferWithinWalletDto.Amount,
-                ConversionRate = rate,
+                Amount = (int)transferWithinWalletDto.Amount,
+                ConversionRate = conversionRate,
                 TransactionType = nameof(TransactionTypes.Debit),
-                TransactionReference = nameof(transactionReference)
+                TransactionReference = transactionReference
             };
             Transaction toTransaction = new Transaction
             {
                 WalletCurrencyId = walletCurrencyTo.Id,
                 CurrencyName = walletCurrencyTo.Currency.Name,
-                Amount = transferWithinWalletDto.Amount * rate,
-                ConversionRate = rate,
+                Amount = (int)newAmount,
+                ConversionRate = (int)conversionRate,
                 TransactionType = nameof(TransactionTypes.Credit),
-                TransactionReference = nameof(transactionReference)
+                TransactionReference = transactionReference
             };
             await _repositoryManager.TransactionRepository.AddTransaction(fromTransaction);
             await _repositoryManager.TransactionRepository.AddTransaction(toTransaction);

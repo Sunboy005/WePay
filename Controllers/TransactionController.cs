@@ -32,26 +32,9 @@ namespace wepay.Controllers
 
             return Ok(transaction);
         }
-        [HttpPost("AddTransaction")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddTransaction([FromBody] TransactionDto transactionDto)
-        {
-            var wallet = await _serviceManager.WalletService.GetWalletByAddress(transactionDto.WalletId);
-            if (wallet == null)
-            {
-                return NotFound();
-            }
+      
 
-            var result = await _serviceManager.TransactionService.AddTransaction(transactionDto);
-            if (result == null)
-            {
-                return BadRequest();
-            }
-            return Ok(result);
-
-
-        }
-
+        [Authorize]
         [HttpGet("GetTransactionByWalletAddress")]
         public async Task<IActionResult> GetTransactionBywalletAddress([FromQuery] string address)
         {

@@ -122,6 +122,16 @@ namespace wepay.Service
             return roles.First();
         }
 
+        public async Task UpgradeUser(User user)
+        {
+            var role =await  GetRoleOfUser(user);
+            if(role == "Elite" || role == "Admin")
+            {
+                throw new BadRequestException("User cannot be upgraded");
+            }
+            await _userManager.AddToRoleAsync(user, "Elite");
+        }
+
     }
 }
 

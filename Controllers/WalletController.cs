@@ -175,6 +175,7 @@ namespace wepay.Controllers
         }
 
         [HttpGet("Name/Address")]
+        [Authorize]
         public async Task<IActionResult> GetUserByWalletAddress([FromQuery] string address)
         {
             var user = await _serviceManager.WalletService.GetUserByWalletAddress(address);

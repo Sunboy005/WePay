@@ -1,4 +1,5 @@
 ﻿using Entities.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using wepay.Models.DTOs;
 using wepay.Service.Interface;
@@ -78,7 +79,7 @@ namespace wepay.Controllers
             return Ok("We have sent a password change code to " + email + "with OTP code " + otpCode);
         }
 
-
+        
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] UserForChangePasswordDto userForChangePasswordDto)
         {
@@ -93,6 +94,7 @@ namespace wepay.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("request-change-wallet-pin")]
         public async Task<IActionResult> RequestChangeWalletPin([FromBody] string userEmail)
         {
@@ -108,6 +110,7 @@ namespace wepay.Controllers
             return Ok("We have sent a wallet pin change to " + userEmail + "with OTP code " + otp);
         }
 
+        [Authorize]
         [HttpPost("change-wallet-pin")]
         public async Task<IActionResult> ChangeWalletPin([FromBody] ChangeWalletPinDto changeWalletPinDto)
         {

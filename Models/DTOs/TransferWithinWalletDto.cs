@@ -6,7 +6,7 @@
         public string WalletAddressTo { get; set; }
         public string CurrencyFromShortCode { get; set; }
         public string CurrencyToShortCode { get; set; }
-        public int Amount { get; set; }
+        public double Amount { get; set; }
         public string WalletPin { get; set; }
     }
 }

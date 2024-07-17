@@ -33,6 +33,7 @@ namespace wepay.Controllers
 
         }
         [HttpGet("getCurrencyById")]
+        [Authorize]
         public async Task<IActionResult> GetWalletCurrencyById([FromQuery] string Id)
         {
             var walletcurrency = await _serviceManager.WalletCurrencyService.GetWalletCurrencyById(Id);
@@ -83,6 +84,7 @@ namespace wepay.Controllers
         }       
 
         [HttpGet("getCurrencyBalance")]
+        [Authorize]
         public async Task<IActionResult> GetWalletCurrencyBalance([FromQuery] string currencyId)
         {
             var currency = await _serviceManager.WalletCurrencyService.GetWalletCurrencyBalance(currencyId);

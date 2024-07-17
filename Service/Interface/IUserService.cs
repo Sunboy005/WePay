@@ -14,5 +14,6 @@ namespace wepay.Service.Interface
         Task DeleteUser(UserDeletionDto userDeletionDto);
         Task UpdateUserAsync(string userId, UserUpdateDto userUpdateDto);
         Task<string> GetRoleOfUser(User user);
+        Task UpgradeUser(User user);
     }
 }

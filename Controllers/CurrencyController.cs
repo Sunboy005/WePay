@@ -16,7 +16,8 @@ namespace wepay.Controllers
         {
             _serviceManager = serviceManager;
         }
-     
+
+        [Authorize(Roles ="Admin")]
         [HttpGet("getCurrencyById")]
         
         public async Task<IActionResult> GetCurrencyById([FromQuery] string currencyId)
@@ -43,6 +44,7 @@ namespace wepay.Controllers
             return Ok(currencyDto);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add-Currency")]
         
         public async Task<IActionResult> AddCurrency([FromBody] CurrencyToAddDto currencyToAddDto)
@@ -56,7 +58,9 @@ namespace wepay.Controllers
             return Ok(result);
             
          
-        }        
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-currency")]
         
         public async Task<IActionResult> DeleteCurrency([FromBody] CurrencyDeletionDto currencyDeletionDto)

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Entities.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using wepay.Models.DTOs;
@@ -59,6 +60,22 @@ namespace wepay.Controllers
             return Ok(identityUser);
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost("upgrade_user/{userId}")]
+
+        public async Task<IActionResult> UpgradeUser(string userId)
+        {
+            var user = await _serviceManager.UserService.GetUserById(userId);
+            if(user == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+            await _serviceManager.UserService.UpgradeUser(user);
+            return Ok();
+
+        }
+        
+
         [HttpPost("create-user")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
@@ -79,7 +96,7 @@ namespace wepay.Controllers
 
 
         [HttpDelete("delete-user")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser([FromBody] UserDeletionDto userDeletionDto)
         {
             await _serviceManager.UserService.DeleteUser(userDeletionDto);
@@ -97,6 +114,7 @@ namespace wepay.Controllers
 
 
         [HttpPost("create-admin")]
+        [Authorize]
         public async Task<IActionResult> RegisterAdmin([FromBody] AdminForRegistrationDto adminForRegistrationDto)
         {
             var result = await _serviceManager.UserService.RegisterAdmin(adminForRegistrationDto);
